@@ -39,16 +39,16 @@ media::Player::~Player()
 }
 void media::Player::set_play_list(const std::vector<std::string>& music_urls)
 {
-
+	_music_urls = music_urls;
 	if (!music_urls.empty())
 	{
-		_music_urls = music_urls;
 		no_music = false;
 		no_music.notify_all();
 	}
-}
-//控制器
 
+}
+
+//控制器
 int media::Player::operate(std::string action, std::string value)
 {
 
@@ -99,7 +99,6 @@ int media::Player::operate(std::string action, std::string value)
 	}
 	else if (action == "seek")
 	{
-		//TODO: 拖动进度条（根据难度等各种因素选做）
 		double target_time = std::stoi(value);
 		_demuxer->seek(target_time);
 	}
@@ -111,7 +110,7 @@ int media::Player::operate(std::string action, std::string value)
 		}
 
 	}
-	//TODO: 更换歌单还未规划
+	//TODO: 更换歌单不在此操作，在外部更换
 
 	if (first.load())
 	{

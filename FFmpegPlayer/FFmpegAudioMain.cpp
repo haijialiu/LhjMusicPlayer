@@ -48,6 +48,7 @@ int input_music_urls(const char** music_urls, int num)
 	 {
 		 _music_urls.push_back(music_urls[i]);
 	 }
+	 
 	 player->set_play_list(_music_urls);
 	 return 0;
 }
