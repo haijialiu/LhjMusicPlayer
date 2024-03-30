@@ -152,6 +152,7 @@
     <ClInclude Include="AudioOutput.h" />
     <ClInclude Include="Decode.h" />
     <ClInclude Include="Demux.h" />
+    <ClInclude Include="FFmpegAudioMain.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="MediaQueue.h" />
@@ -163,6 +164,7 @@
     <ClCompile Include="Decode.cpp" />
     <ClCompile Include="Demux.cpp" />
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="FFmpegAudioMain.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -171,9 +173,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Test.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="vcpkg-configuration.json" />

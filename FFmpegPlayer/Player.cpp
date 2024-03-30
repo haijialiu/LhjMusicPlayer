@@ -5,21 +5,20 @@
 #include <algorithm>
 #include <future>
 #include <iostream>
+#include "Log.h"
 #ifdef _WIN32
 #include <windows.h>
 #include <processthreadsapi.h>
 #endif
 namespace media
 {
-	std::atomic_bool can_display = false;
-	std::atomic_bool player_over = false;
+
+	std::atomic_bool play_over = false;
 	std::atomic_bool no_music = true;
 	std::atomic_bool music_pause = true;
-	std::atomic_bool first = true;
+	std::atomic_bool first = false;
 	std::atomic_bool switch_flag = false;
 
-	extern std::atomic_bool demux_abort;
-	extern std::atomic_bool decode_abort;
 	extern std::atomic_bool audio_play_abort;
 
 	std::shared_ptr<AVPacketQueue> Player::_audio_pkt_queue = std::make_shared<AVPacketQueue>();
@@ -27,6 +26,7 @@ namespace media
 	std::future<int> audio_future;
 	std::future<int> player_future;
 
+	
 }
 
 
@@ -34,7 +34,7 @@ namespace media
 media::Player::~Player()
 {
 	interrupt_current_play();
-	player_over.wait(false);
+	play_over.wait(false);
 }
 void media::Player::set_play_list(const std::vector<std::string>& music_urls)
 {
@@ -99,6 +99,8 @@ int media::Player::operate(std::string action, std::string value)
 	else if (action == "seek")
 	{
 		//TODO: 拖动进度条（根据难度等各种因素选做）
+		double target_time = std::stoi(value);
+		_demuxer->seek(target_time);
 	}
 	else if (action == "system")
 	{
@@ -129,14 +131,14 @@ int media::Player::main_loop()
 	}
 
 //#ifdef _DEBUG
-//	while (!_abort)
-//	{
-//		//TODO: 打包前记得注释掉
-//		std::string action;
-//		std::string value;
-//		std::cin >> action >> value;
-//		operate(action, value);
-//	}
+	//while (!_abort)
+	//{
+	//	//TODO: 打包前记得注释掉
+	//	std::string action;
+	//	std::string value;
+	//	std::cin >> action >> value;
+	//	operate(action, value);
+	//}
 //
 //#endif // _DEBUG
 
@@ -152,13 +154,12 @@ int media::Player::start()
 
 #ifdef _WIN32
 	HRESULT r;
-	r = SetThreadDescription(GetCurrentThread(), L"播放线程");
+	r = SetThreadDescription(GetCurrentThread(), L"控制器");
 #endif
 	// 播放模式说明： 0 单曲循环 1 顺序播放 2 列表循环
 	
 	while (!_abort)
 	{
-
 
 		if (_music_urls.empty())
 		{
@@ -170,8 +171,9 @@ int media::Player::start()
 		if (switch_flag.load())
 		{
 			switch_flag = false;
+			continue;
 		}
-		else if (play_mode == 0)
+		if (play_mode == 0)
 		{
 			//单曲循环
 		}
@@ -196,34 +198,27 @@ int media::Player::start()
 
 int media::Player::play()
 {
-
+	clean_queue();
 #ifdef _WIN32
 	HRESULT r;
-	r = SetThreadDescription(GetCurrentThread(), L"播放线程");
+	r = SetThreadDescription(GetCurrentThread(), L"控制器play");
 #endif
+
 	if (_music_urls.empty())
 		return 0;
-	player_over = false;
+	play_over = false;
 	int ret = -1;
-	_demuxer = std::make_unique<Demuxer>(_audio_pkt_queue, _music_urls[_cur_play_index]);
-	_demuxer->set_name();
-	_audio_decoder = std::make_unique<Decoder>(_audio_pkt_queue, _audio_frame_queue);
-	_audio_decoder->set_name("音频");
-	ret = _demuxer->init();
-	if (ret < 0)
-	{
-		return ret;
-	}
-	_demuxer->start();
-	//打印信息
-	//std::map <std::string, std::string> metadata = _demuxer->get_metadata();
-	//auto _titile = metadata.find("title");
-	//std::string title = _titile == metadata.end() ? "无标题" : _titile->second;
-	//auto _artist = metadata.find("artist");
-	//std::string artist = _artist == metadata.end() ? "无歌手" : _artist->second;
-	//auto seconds = _demuxer->get_audio_seconds();
-	//Log::info(std::format("正在播放: {} - {} {}:{:02}:{:02}", title, artist, seconds / 3600, (seconds % 3600) / 60, seconds % 3600 % 60));
+	_demuxer = std::make_shared<Demuxer>(_audio_pkt_queue, _music_urls[_cur_play_index]);
 
+
+	_audio_decoder = std::make_shared<Decoder>(_audio_pkt_queue, _audio_frame_queue);
+
+	//ret = _demuxer->init();
+	//if (ret < 0)
+	//{
+	//	return ret;
+	//}
+	_demuxer->start();
 
 	//2，获取音频解码参数用于解码线程
 	//Log::debug("获取音频解码参数");
@@ -231,35 +226,28 @@ int media::Player::play()
 
 	//只放音频的
 	prepare_audio_player(params);
-	if (first.load())
-	{
-		_audio_output->pause();
-		first = false;
-	}
-	if (!play_status.load())
-	{
-		_audio_output->pause();
-	}
+	//if (first.load())
+	//{
+	//	_audio_output->pause();
+	//	first = false;
+	//}
+	//if (!play_status.load())
+	//{
+	//	_audio_output->pause();
+	//}
 	//4，加载解码线程
 	//Log::info("初始化音频解码线程...");
 	_audio_decoder->init(params);
 	_audio_decoder->start();
 
-	
-	//5，唤醒解复用和解码线程
-	//Log::debug("等待音频解码线程...");
 
 	wait_to_play_over();
 	//6，销毁播放器（播放器参数尽量贴近音频文件）
 	destroy_audio_player();
-	//destroy_video_player();
-	can_display = false;
-	//audio_future.get();
-	//Log::debug("==============================一个播放周期结束==============================");
 
-	player_over = true;
-	player_over.notify_all();
+	play_over = true;
 
+	wait_demuxer_and_decode_exit();
 	return 0;
 }
 
@@ -269,7 +257,7 @@ void media::Player::switch_next(int index)
 	interrupt_current_play();
 	if (!music_pause.load())
 	{
-		player_over.wait(false);
+		play_over.wait(false);
 	}
 
 
@@ -302,12 +290,12 @@ void media::Player::quit()
 void media::Player::prepare_audio_player(AVCodecParameters* params)
 {
 	//Log::info("初始化播放器");
-	_audio_params = std::make_unique<AudioParams>();
+	_audio_params = std::make_shared<AudioParams>();
 	_audio_params->ch_layout = params->ch_layout;
 	_audio_params->fmt = (enum AVSampleFormat)params->format;
 	_audio_params->freq = params->sample_rate;
 	_audio_params->frame_size = params->frame_size;
-	_audio_output = std::make_unique<AudioOutput>(_demuxer->audio_stream_timebase(), *_audio_params, _audio_frame_queue);
+	_audio_output = std::make_shared<AudioOutput>(_demuxer->audio_stream_timebase(), *_audio_params, _audio_frame_queue);
 	//播放器初始化并等待pcm包
 	_audio_output->init();
 	//Log::info("播放设备已打开");
@@ -318,7 +306,6 @@ void media::Player::destroy_audio_player()
 	audio_play_abort = true;
 	if (_audio_output)
 	{
-
 		_audio_output = nullptr;
 		//Log::debug("销毁了音频播放器");
 	}
@@ -329,30 +316,50 @@ void media::Player::destroy_audio_player()
 void media::Player::wait_to_play_over()
 {
 	//等待解码器把音频帧全部解完
-	//Log::debug("等待音频播放完成...");
-	_audio_decoder->join();
+	Log::debug("等待音频解码完成...");
+	_audio_decoder->decode_over.wait(false);
 	//等待播放器把剩余帧耗尽
 
 	while (!_audio_frame_queue->empty())
 	{
 		//如果此时播放器都被结束掉了则立即清空
-		if (audio_play_abort)
+		if (!_audio_output)
 		{
 			_audio_frame_queue->pop();
 		}
 	}
-	audio_play_abort = true;
 }
 
 void media::Player::interrupt_current_play()
 {
 	switch_flag = true;
-	demux_abort = true;
-	decode_abort = true;
-	audio_play_abort = true;
-	//_audio_output = nullptr;
-	//audio_future.get();
-	
+
+	play_over = true;
+	wait_demuxer_and_decode_exit();
+	_audio_output = nullptr;
+}
+
+void media::Player::wait_demuxer_and_decode_exit()
+{
+	if (_demuxer->working.load() == false)
+	{
+		_demuxer->working = true;
+		_demuxer->working.notify_all();
+	}
+	if (_audio_decoder->working.load() == false)
+	{
+		_audio_decoder->working = true;
+		_audio_decoder->working.notify_all();
+
+	}
+	_demuxer->demux_abort.wait(false);
+	_audio_decoder->decode_abort.wait(false);
+}
+
+void media::Player::clean_queue()
+{
+	while (!_audio_pkt_queue->empty())_audio_pkt_queue->pop();
+	while (!_audio_frame_queue->empty())_audio_frame_queue->pop();
 }
 
 

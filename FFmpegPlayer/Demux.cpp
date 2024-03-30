@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Demux.h"
-//#include "Log.h"
+#include "Log.h"
 #include <format>
 extern "C"
 {
@@ -13,79 +13,80 @@ extern "C"
 using std::format;
 namespace media
 {
-	std::atomic_bool demux_abort = false;
-
+	extern std::atomic_bool play_over;
 }
 media::Demuxer::Demuxer(std::shared_ptr<AVPacketQueue> audio_pkt_queue,std::string url)
 	:_audio_queue(audio_pkt_queue), _url(url)
 {
 	//Log::debug(format("解复用构造：{}",_url));
+
+	ifmt_ctx = avformat_alloc_context();
+	if (!ifmt_ctx)
+	{
+		throw std::bad_alloc();
+	}
+	try {
+		int ret = -1;
+		ret = avformat_open_input(&ifmt_ctx, _url.c_str(), nullptr, nullptr);
+		if (ret != 0)
+		{
+			av_strerror(ret, _error_str, sizeof(_error_str));
+			throw std::ios_base::failure::failure(_error_str);
+		}
+		ret = avformat_find_stream_info(ifmt_ctx, nullptr);
+		if (ret != 0)
+		{
+			av_strerror(ret, _error_str, sizeof(_error_str));
+			throw std::format_error(_error_str);
+		}
+		_audio_index = av_find_best_stream(ifmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
+		if (_audio_index == -1)
+		{
+			throw std::format_error("没有找到音频流！");
+		}
+	}
+	catch (std::ios_base::failure& e)
+	{
+		avformat_free_context(ifmt_ctx);
+		throw e;
+	}
+	catch (std::format_error& e)
+	{
+		avformat_close_input(&ifmt_ctx);
+		throw e;
+	}
+
 }
 
 media::Demuxer::~Demuxer()
 {
 	//Log::debug("解复用销毁");
 	avformat_close_input(&ifmt_ctx);
-	delete work_thread;
 }
 
-int media::Demuxer::init()
-{
-	clean_queue();
 
-	int ret = 0;
-	ifmt_ctx = avformat_alloc_context();
-	if (!ifmt_ctx)
-	{
-		//Log::error("avformat_alloc_context failed!");
-		return -1;
-	}
-	ret = avformat_open_input(&ifmt_ctx, _url.c_str(), nullptr, nullptr);
-	if (ret != 0)
-	{
-		av_strerror(ret, _error_str, sizeof(_error_str));
-		//Log::error(format("打开文件失败：{}",_error_str));
-		return -1;
-	}
-	ret = avformat_find_stream_info(ifmt_ctx, nullptr);
-	if (ret != 0)
-	{
-		av_strerror(ret, _error_str, sizeof(_error_str));
-		//Log::error(format("流信息获取失败：{}", _error_str));
-		return -1;
-	}
-	//av_dump_format(ifmt_ctx,0,_url.c_str(),0);
-	_audio_index = av_find_best_stream(ifmt_ctx, AVMEDIA_TYPE_AUDIO, -1, -1, nullptr, 0);
-
-	if (_audio_index == -1)
-	{
-		//Log::error("没有找到音频流！");
-		return -1;
-	}
-	//Log::debug("解复用初始化完成");
-	demux_abort = false;
-	return ret;
-}
-
+//__declspec(deprecated)
 void media::Demuxer::start()
 {
-	work_thread = new std::jthread(&Demuxer::run, this);
-
-	if (!work_thread)
-	{
-		//Log::error("new std::thread failed");
-		return;
-	}
+	work_thread = std::make_unique<std::jthread>(&Demuxer::run, this);
 }
 
 int media::Demuxer::run()
 {
-	//Log::debug("解复用线程运行中");
+#ifdef _WIN32
+	HRESULT r;
+	r = SetThreadDescription(GetCurrentThread(), L"解复用");
+#endif
+	this->working = true;
+
+	Log::debug("解复用运行中");
+
 	int ret = 0;
-	while (!demux_abort.load())
+	//只要当前播放还在进行
+	while (!play_over.load())
 	{
 		AVPacket pkt;
-		if (_audio_queue->size() > 100 && !demux_abort.load())
+		if (_audio_queue->size() > 100 && !play_over.load())
 		{
 			//Log::debug("包队列已满，请解包播放");
 			std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -95,40 +96,56 @@ int media::Demuxer::run()
 		if (ret == AVERROR_EOF)
 		{
 			//解复用结束了
-			//Log::debug("解复用线程 av_read_frame 文件尾");
-			demux_abort = true;
-	
+			Log::debug("解复用线程 av_read_frame 文件尾");
+			this->demux_over = true;
+			this->demux_over.notify_all();
+
+			this->working = false;
+			Log::debug("解复用休眠"); 
+
 		}
 		else if (ret < 0)
 		{
 			av_strerror(ret, _error_str, sizeof(_error_str));
-			//Log::error(format("av_read_frame：{}", _error_str));
-			demux_abort = true;
+			Log::error(format("av_read_frame：{}", _error_str));
+			return -1;
 		}
 		if (pkt.stream_index == _audio_index)
 		{
-			//Log::debug(format("DECODE thread __audio_queue is: {}", (int)&_audio_queue));
 			_audio_queue->push(&pkt);
-			
-			
-			//Log::debug(format("audio pkt queue size: {}",(int)(this->_audio_queue->size())));
+			//如果解完了就休眠
+
+			this->working.wait(false);
 		}
 		else
 		{
 			av_packet_unref(&pkt);
 		}
 	}
-	//Log::debug("解复用线程退出");
+
+	this->demux_over = true;
+	this->working = false;
+	this->demux_over.notify_all();
+	this->working.notify_all();
+
+	this->demux_abort = true;
+	this->demux_abort.notify_all();
+	Log::debug("解复用线程退出");
 	return 0;
 }
 
 int media::Demuxer::seek(double target_time)
 {
-
+	clean_queue();
 	double _target_time = target_time * AV_TIME_BASE;
 	auto target_timestamp = av_rescale_q(_target_time, AV_TIME_BASE_Q, audio_stream_timebase());
 	av_seek_frame(ifmt_ctx, _audio_index, target_timestamp, AVSEEK_FLAG_BACKWARD);
-
+	//唤醒
+	if (this->working.load() == false)
+	{
+		this->working = true;
+		this->working.notify_all();
+	}
 	return 0;
 }
 
@@ -182,6 +199,7 @@ AVRational media::Demuxer::audio_stream_timebase()
 
 void media::Demuxer::clean_queue()
 {
+
 	clean_audio_queue();
 }
 

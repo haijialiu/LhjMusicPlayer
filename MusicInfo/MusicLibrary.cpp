@@ -131,9 +131,11 @@ static album_info media_album_png()
 		{
 			info.image = pkt.data;
 			info.image_size = pkt.size;
+#ifdef _DEBUG
 			ofstream out("imagecpp.png", ios::out | ios::binary);
 			out.write((char*)pkt.data, pkt.size);
 			out.close();
+#endif // _DEBUG
 			break;
 		}
 		else

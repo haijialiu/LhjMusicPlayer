@@ -42,6 +42,9 @@
     <ClInclude Include="Player.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="FFmpegAudioMain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -65,8 +68,8 @@
     <ClCompile Include="Player.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
-      <Filter>单元测试文件</Filter>
+    <ClCompile Include="FFmpegAudioMain.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

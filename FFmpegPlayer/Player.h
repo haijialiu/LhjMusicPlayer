@@ -7,7 +7,7 @@
 #include "AudioOutput.h"
 
 namespace media {
-	class Player
+	class __declspec(dllexport) Player
 	{
 	public:
 
@@ -44,14 +44,20 @@ namespace media {
 		void destroy_audio_player();
 		void wait_to_play_over();
 		void interrupt_current_play();
+		void wait_demuxer_and_decode_exit();
+		void clean_queue();
 
 		bool _abort = false;
 		std::atomic_bool play_status = false;
 		std::unique_ptr <std::jthread> work_thread = nullptr;
-		std::unique_ptr <Demuxer> _demuxer = nullptr;
-		std::unique_ptr <Decoder> _audio_decoder = nullptr;
-		std::unique_ptr <AudioParams> _audio_params = nullptr;
-		std::unique_ptr <AudioOutput> _audio_output = nullptr;
+
+		std::shared_ptr <Demuxer> _demuxer = nullptr;
+		std::unique_ptr<std::jthread> demuxer_thread = nullptr;
+
+		std::shared_ptr <Decoder> _audio_decoder = nullptr;
+		std::unique_ptr<std::jthread> decoder_thread = nullptr;
+		std::shared_ptr <AudioParams> _audio_params = nullptr;
+		std::shared_ptr <AudioOutput> _audio_output = nullptr;
 		std::vector<std::string> _music_urls;
 		int _cur_play_index = 0;
 		static std::shared_ptr <AVPacketQueue> _audio_pkt_queue;	

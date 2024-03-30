@@ -1,17 +1,26 @@
 #include "pch.h"
 #include "../MusicInfo/MusicLibrary.h"
-namespace tests {
-	class MusicInfoTest :public testing::Test
+#include <iostream>
+namespace tests
+{
+	using namespace std;
+
+	class MusicInfoTests :public testing::Test
 	{
+
 	protected:
-		void TearDown() override
+		void SetUp() override
 		{
-			music_free();
 		}
+
+		
+
 	};
-	TEST_F(MusicInfoTest, get_music_info)
+	TEST_F(MusicInfoTests, Tests)
 	{
-		music_load(LR"(C:\Users\haijialiu\Desktop\media\fripSide (フリップサイド) - only my railgun.flac)");
+		music_load(LR"(C:\Users\haijialiu\Desktop\media\Aiobahn _ Yunomi (ゆのみ) - 银河鉄道のペンギン (银河铁道的企鹅).flac)");
 		auto info = get_music_info();
+		wcout.imbue(locale(""));
+		wcout << info.title << endl;
 	}
 }

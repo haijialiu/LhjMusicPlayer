@@ -12,6 +12,7 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
+    <Configurations>Debug;Release;Debug Run-unittests</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

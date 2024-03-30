@@ -12,6 +12,7 @@ namespace media
     std::atomic_bool audio_play_abort_confirm = false;
     std::atomic_bool audio_shange_volume_event = false;
 
+    extern std::atomic_bool play_over;
 }
 media::AudioOutput::AudioOutput(AVRational time_base,const AudioParams& audio_params, std::shared_ptr<AVFrameQueue> frame_queue)
     : _time_base(time_base), _src_tgt(audio_params), _frame_queue(frame_queue)
@@ -42,7 +43,7 @@ void media::fill_audio_pcm(void* userdata,Uint8* stream,int len)
     static uint8_t audio_buf1[(AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2]; //存放PCM重采样数据
     static unsigned int audio_buf_size = 0;
     static unsigned int audio_buf_index = 0;
-    while (len > 0 && !audio_play_abort)
+    while (len > 0 && !play_over.load())
     {
         bool no_data = false;
         bool re_sample = false;
@@ -136,7 +137,7 @@ void media::fill_audio_pcm(void* userdata,Uint8* stream,int len)
         if(data->play_seconds)
             *data->play_seconds = pts;
 #ifdef _DEBUG
-        Log::error(std::format("audio pts:{:02}:{:.3f}",(int)pts/60,fmod(pts,60)));
+        //Log::error(std::format("audio pts:{:02}:{:.3f}",(int)pts/60,fmod(pts,60)));
 #endif
         //std::cout << std::format("audio pts:{:02}:{:.3f}", (int)pts / 60, fmod(pts, 60)) << "\r";
         
@@ -182,7 +183,7 @@ int media::AudioOutput::init()
     _dst_tgt.freq = wanted_spec.freq;
     _dst_tgt.frame_size = wanted_spec.samples;
     SDL_PauseAudio(0);
-    Log::debug("AudioOutput::init over");
+    Log::debug("音频播放组件初始化完成");
     return 0;
 }
 

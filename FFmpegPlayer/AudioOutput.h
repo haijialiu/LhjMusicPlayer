@@ -20,7 +20,7 @@ namespace media {
         enum AVSampleFormat fmt;
         int frame_size;
     };
-    class AudioOutput
+    class __declspec(dllexport) AudioOutput
     {
         friend void fill_audio_pcm(void* userdata, Uint8* streak, int len);
     public:
