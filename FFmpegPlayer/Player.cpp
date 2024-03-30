@@ -20,6 +20,7 @@ namespace media
 	std::atomic_bool switch_flag = false;
 
 	extern std::atomic_bool audio_play_abort;
+	extern std::atomic_bool audio_play_abort_confirm;
 
 	std::shared_ptr<AVPacketQueue> Player::_audio_pkt_queue = std::make_shared<AVPacketQueue>();
 	std::shared_ptr<AVFrameQueue> Player::_audio_frame_queue = std::make_shared<AVFrameQueue>();
@@ -304,6 +305,7 @@ void media::Player::prepare_audio_player(AVCodecParameters* params)
 void media::Player::destroy_audio_player()
 {
 	audio_play_abort = true;
+	_audio_output->destory();
 	if (_audio_output)
 	{
 		_audio_output = nullptr;
@@ -336,7 +338,9 @@ void media::Player::interrupt_current_play()
 
 	play_over = true;
 	wait_demuxer_and_decode_exit();
-	_audio_output = nullptr;
+
+	destroy_audio_player();
+
 }
 
 void media::Player::wait_demuxer_and_decode_exit()

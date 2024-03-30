@@ -30,6 +30,8 @@ media::AudioOutput::~AudioOutput()
     SDL_PauseAudio(1);
 
     SDL_CloseAudio();
+    audio_play_abort_confirm = true;
+    audio_play_abort_confirm.notify_all();
 #ifdef _DEBUG
     Log::debug("AudioOutput::~AudioOutput");
 #endif
@@ -167,7 +169,7 @@ int media::AudioOutput::init()
     if (ret < 0)
     {
 #ifdef _DEBUG
-        Log::error("SDL_OpenAudio error");
+        Log::error(std::format("SDL_OpenAudio error: {}", SDL_GetError()));
 #endif
         return -1;
     }
