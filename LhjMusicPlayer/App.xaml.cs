@@ -32,8 +32,12 @@ namespace LhjMusicPlayer
         /// </summary>
         public App()
         {
+            Services = ConfigureServices();
             this.InitializeComponent();
         }
+
+        public new static App Current => (App)Application.Current;
+        public IServiceProvider Services { get; }
 
         /// <summary>
         /// Invoked when the application is launched.
