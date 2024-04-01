@@ -3,7 +3,7 @@
 #include <string>
 #include <algorithm>
 #include <fstream>
-#include "MusicLibrary.h"
+#include "MusicInfo.h"
 extern "C"
 {
 #include <libavformat/avformat.h>
@@ -111,14 +111,15 @@ int music_time()
 //专辑图片
 static album_info media_album_png()
 {
+	album_info _info{ 0 };
 	using namespace std;
 	if (video_index < 0)
-		return info;
+		return _info;
 	AVPacket pkt;
 
 	if (!ifmt)
 	{
-		return info;
+		return _info;
 	}
 	auto codec_ctx = avcodec_alloc_context3(nullptr);
 	int _ret = -1;
@@ -126,11 +127,14 @@ static album_info media_album_png()
 	{
 		_ret = av_read_frame(ifmt, &pkt);
 		if (_ret < 0)
-			return info;
+		{
+			avcodec_free_context(&codec_ctx);
+			return _info;
+		}
 		if (pkt.stream_index == video_index)
 		{
-			info.image = pkt.data;
-			info.image_size = pkt.size;
+			_info.image = pkt.data;
+			_info.image_size = pkt.size;
 #ifdef _DEBUG
 			ofstream out("imagecpp.png", ios::out | ios::binary);
 			out.write((char*)pkt.data, pkt.size);
@@ -143,8 +147,8 @@ static album_info media_album_png()
 			av_packet_unref(&pkt);
 		}
 	}
-	avcodec_close(codec_ctx);
-	return info;
+	avcodec_free_context(&codec_ctx);
+	return _info;
 }
 
 music_info get_music_info()

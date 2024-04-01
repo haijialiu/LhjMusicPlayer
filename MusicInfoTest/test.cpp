@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "../MusicInfo/MusicLibrary.h"
+#include "../MusicInfo/MusicInfo.h"
 #include <iostream>
 namespace tests
 {

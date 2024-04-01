@@ -213,11 +213,7 @@ int media::Player::play()
 
 	_audio_decoder = std::make_shared<Decoder>(_audio_pkt_queue, _audio_frame_queue);
 
-	//ret = _demuxer->init();
-	//if (ret < 0)
-	//{
-	//	return ret;
-	//}
+
 	_demuxer->start();
 
 	//2，获取音频解码参数用于解码线程
@@ -226,15 +222,15 @@ int media::Player::play()
 
 	//只放音频的
 	prepare_audio_player(params);
-	//if (first.load())
-	//{
-	//	_audio_output->pause();
-	//	first = false;
-	//}
-	//if (!play_status.load())
-	//{
-	//	_audio_output->pause();
-	//}
+	if (first.load())
+	{
+		_audio_output->pause();
+		first = false;
+	}
+	if (!play_status.load())
+	{
+		_audio_output->pause();
+	}
 	//4，加载解码线程
 	//Log::info("初始化音频解码线程...");
 	_audio_decoder->init(params);
