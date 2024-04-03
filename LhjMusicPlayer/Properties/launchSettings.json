@@ -4,7 +4,8 @@
       "commandName": "MsixPackage"
     },
     "LhjMusicPlayer (Unpackaged)": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "nativeDebugging": true
     }
   }
 }

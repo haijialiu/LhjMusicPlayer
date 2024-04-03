@@ -1,4 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+﻿using LhjMusicPlayer.Models;
+using Microsoft.UI.Xaml;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -15,6 +17,7 @@ using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using LhjMusicPlayer.ViewModels;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -38,6 +41,18 @@ namespace LhjMusicPlayer
 
         public new static App Current => (App)Application.Current;
         public IServiceProvider Services { get; }
+        public static IServiceProvider ConfigureServices()
+        {
+            var services = new ServiceCollection();
+
+            //播放器
+            services.AddSingleton<MusicPlayer>();
+
+            //ViewModel
+            services.AddSingleton<MusicListViewModel>();
+
+            return services.BuildServiceProvider();
+        }
 
         /// <summary>
         /// Invoked when the application is launched.
@@ -49,6 +64,6 @@ namespace LhjMusicPlayer
             m_window.Activate();
         }
 
-        private Window m_window;
+        private Window? m_window;
     }
 }

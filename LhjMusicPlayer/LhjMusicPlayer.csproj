@@ -13,12 +13,13 @@
     <EnableMsixTooling>true</EnableMsixTooling>
     <WindowsPackageType>None</WindowsPackageType>
     <Configurations>Debug;Release;Debug Run-unittests</Configurations>
+	<Nullable>enable</Nullable>
+	<ApplicationIcon>Assets\image\music.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\MainPage.xaml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Remove="UserControls\PlayerController.xaml" />
+    <None Remove="UserControls\PlayerControl.xaml" />
+    <None Remove="UserControls\PlayingListControl.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,11 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.3" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.5.240311000" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.22621.3233" />
     <Manifest Include="$(ApplicationManifest)" />
@@ -47,14 +53,19 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="UserControls\PlayingListControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\MainPage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Update="UserControls\PlayerController.xaml">
+    <Page Update="UserControls\PlayerControl.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </None>
+    </Page>
   </ItemGroup>
 
   <!-- 

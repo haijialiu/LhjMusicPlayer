@@ -141,7 +141,7 @@ int media::Demuxer::seek(double target_time)
 	auto target_timestamp = av_rescale_q(_target_time, AV_TIME_BASE_Q, audio_stream_timebase());
 	av_seek_frame(ifmt_ctx, _audio_index, target_timestamp, AVSEEK_FLAG_BACKWARD);
 	//唤醒
-	if (this->working.load() == false)
+	if (this->working == false)
 	{
 		this->working = true;
 		this->working.notify_all();
