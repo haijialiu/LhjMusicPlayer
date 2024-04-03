@@ -1,4 +1,7 @@
-﻿using Microsoft.UI.Xaml;
+﻿using LhjMusicPlayer.Models;
+using LhjMusicPlayer.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
@@ -32,9 +35,24 @@ namespace LhjMusicPlayer
         /// </summary>
         public App()
         {
+            Services = ConfigureServices();
             this.InitializeComponent();
         }
+        public new static App Current => (App)Application.Current;
+        public IServiceProvider Services { get; }
+        public static IServiceProvider ConfigureServices()
+        {
 
+            var services = new ServiceCollection();
+
+            //播放器
+            services.AddSingleton<MusicPlayer>();
+
+            //ViewModel
+            services.AddSingleton<MusicListViewModel>();
+
+            return services.BuildServiceProvider();
+        }
         /// <summary>
         /// Invoked when the application is launched.
         /// </summary>
