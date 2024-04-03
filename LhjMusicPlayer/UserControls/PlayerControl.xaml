@@ -58,8 +58,7 @@
                         ManipulationStarted="play_progress_ManipulationStarted"
                         ManipulationCompleted="play_progress_ManipulationCompleted"
                         Maximum="{x:Bind player.CurrentMusic.Time,Mode=OneWay}" 
-                        />
-                <Slider MinWidth="200" Maximum="121"/>
+                        Value="{x:Bind player.CurrentTime,Mode=OneWay}"/>
                 <TextBlock VerticalAlignment="Center" Margin="10,0,0,0" Text="{x:Bind player.CurrentMusic.Time,Mode=OneWay,Converter={StaticResource seconds_string_coverter}}">03:15</TextBlock>
             </StackPanel>
         </StackPanel>

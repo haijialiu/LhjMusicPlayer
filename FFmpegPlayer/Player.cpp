@@ -226,15 +226,15 @@ int media::Player::play()
 
 	//只放音频的
 	prepare_audio_player(params);
-	//if (first.load())
-	//{
-	//	_audio_output->pause();
-	//	first = false;
-	//}
-	//if (!play_status.load())
-	//{
-	//	_audio_output->pause();
-	//}
+	if (first.load())
+	{
+		_audio_output->pause();
+		first = false;
+	}
+	if (!play_status.load())
+	{
+		_audio_output->pause();
+	}
 	//4，加载解码线程
 	//Log::info("初始化音频解码线程...");
 	_audio_decoder->init(params);

@@ -35,57 +35,57 @@ namespace LhjMusicPlayer.UserControls
         public PlayerControl()
         {
             DataContext = App.Current.Services.GetService<MusicListViewModel>();
-            //player = App.Current.Services.GetRequiredService<MusicPlayer>();
+            player = App.Current.Services.GetRequiredService<MusicPlayer>();
             this.InitializeComponent();
-            //Unloaded += PlayControllerCloseEvent;
-            //threadPoolTimer = ThreadPoolTimer.CreatePeriodicTimer((source) =>
-            //{
-            //    if (spyPlayer)
-            //    {
-            //        var current_index = FFmpegPlayer.CurrentPlayIndex();
-            //        var current_play_time = FFmpegPlayer.PlayedTime();
-            //        if (dispatcherQueue.HasThreadAccess)
-            //        {
+            Unloaded += PlayControllerCloseEvent;
+            threadPoolTimer = ThreadPoolTimer.CreatePeriodicTimer((source) =>
+            {
+                if (spyPlayer)
+                {
+                    var current_index = FFmpegPlayer.CurrentPlayIndex();
+                    var current_play_time = FFmpegPlayer.PlayedTime();
+                    if (dispatcherQueue.HasThreadAccess)
+                    {
 
-            //        }
-            //        else
-            //        {
-            //            bool isQueued = dispatcherQueue.TryEnqueue(() =>
-            //            {
-            //                //修改值会触发onChanged 刷新UI
-            //                player.CurrentPlayIndex = current_index;
-            //                player.CurrentTime = FFmpegPlayer.PlayedTime();
+                    }
+                    else
+                    {
+                        bool isQueued = dispatcherQueue.TryEnqueue(() =>
+                        {
+                            //修改值会触发onChanged 刷新UI
+                            player.CurrentPlayIndex = current_index;
+                            player.CurrentTime = FFmpegPlayer.PlayedTime();
 
-            //            });
-            //        }
-            //    }
-            //}, span);
+                        });
+                    }
+                }
+            }, span);
         }
-        //private void PlayControllerCloseEvent(object sender, RoutedEventArgs e)
-        //{
-        //    threadPoolTimer.Cancel();
-        //}
+        private void PlayControllerCloseEvent(object sender, RoutedEventArgs e)
+        {
+            threadPoolTimer.Cancel();
+        }
         private void Play_Button_Click(object sender, RoutedEventArgs e)
         {
-            //if (player.PlayStatus)
-            //{
-            //    MusicPlayer.Operate("pause", "1");
-            //}
-            //else
-            //{
-            //    MusicPlayer.Operate("resume", "1");
-            //}
-            //player.PlayStatus = !player.PlayStatus;
+            if (player.PlayStatus)
+            {
+                MusicPlayer.Operate("pause", "1");
+            }
+            else
+            {
+                MusicPlayer.Operate("resume", "1");
+            }
+            player.PlayStatus = !player.PlayStatus;
         }
         private void Prev_Button_Click(object sender, RoutedEventArgs e)
         {
             player.CurrentPlayIndex -= 1;
-            //MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
+            MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
         }
         private void Next_Button_Click(object sender, RoutedEventArgs e)
         {
             player.CurrentPlayIndex += 1;
-            //MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
+            MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
         }
         private void play_progress_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
@@ -94,7 +94,7 @@ namespace LhjMusicPlayer.UserControls
 
         private void play_progress_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
-            //MusicPlayer.Operate("seek", ((Slider)sender).Value.ToString());
+            MusicPlayer.Operate("seek", ((Slider)sender).Value.ToString());
             spyPlayer = true;
         }
 
