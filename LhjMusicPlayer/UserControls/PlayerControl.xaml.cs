@@ -32,6 +32,7 @@ namespace LhjMusicPlayer.UserControls
         private readonly TimeSpan span = TimeSpan.FromMilliseconds(100);
         private readonly ThreadPoolTimer threadPoolTimer;
         private bool spyPlayer = true;
+        private bool manSet = false;
         public PlayerControl()
         {
             DataContext = App.Current.Services.GetService<MusicListViewModel>();
@@ -59,6 +60,7 @@ namespace LhjMusicPlayer.UserControls
                         });
                     }
                 }
+
             }, span);
         }
         private void PlayControllerCloseEvent(object sender, RoutedEventArgs e)
@@ -96,6 +98,7 @@ namespace LhjMusicPlayer.UserControls
         {
             MusicPlayer.Operate("seek", ((Slider)sender).Value.ToString());
             spyPlayer = true;
+            manSet = true;
         }
 
     }
