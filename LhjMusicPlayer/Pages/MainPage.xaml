@@ -11,15 +11,32 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="150"/>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Grid.Column="0">这是主页面，所有东西从这里设计</TextBlock>
-        <control:PlayerControl Grid.Row="1" Grid.Column="0"/>
+
+        <NavigationView  x:Name="MainNavition" 
+             ItemInvoked="MainNavition_ItemInvoked"
+             IsSettingsVisible="False"
+             OpenPaneLength="300">
+
+
+            <NavigationView.Header>
+                <TextBlock TextAlignment="Start" x:Name="NaviHeader" Text="主页"/>
+            </NavigationView.Header>
+
+            <NavigationView.MenuItems>
+                <NavigationViewItemHeader Content="我的音乐"/>
+                <NavigationViewItem Icon="Home" Content="主页" Tag="MainPage"/>
+                <NavigationViewItem Icon="Favorite" Content="我喜欢" Tag="MusicList" DataContext="2" />
+                <NavigationViewItem Icon="Download" Content="本地音乐" Tag="MusicList" DataContext="1"/>
+                <NavigationViewItemHeader Content="自建歌单"/>
+                <!--自建歌单以代码动态渲染-->
+
+            </NavigationView.MenuItems>
+
+
+            <Frame x:Name="contentFrame"/>
+        </NavigationView>
+
+
 
     </Grid>
 </Page>

@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 
-namespace LhjMusicPlayer.common
+namespace LhjMusicPlayer.Common
 {
     public class FFmpegPlayer
     {

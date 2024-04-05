@@ -25,7 +25,7 @@
                  RelativePanel.AlignVerticalCenterWithPanel="True"
                  >
             <!--专辑图片-->
-            <Button Background="Transparent">
+            <Button Background="Transparent" Click="Lyric_Button_Click">
                 <Image Stretch="UniformToFill" x:Name="album_image"  Source="{x:Bind player.CurrentMusic.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
                     Height="100" Width="100" />
             </Button>

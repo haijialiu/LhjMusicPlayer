@@ -45,8 +45,10 @@ namespace LhjMusicPlayer
         {
             var services = new ServiceCollection();
 
-            //播放器
+            //音乐播放器
             services.AddSingleton<MusicPlayer>();
+            //歌词播放器
+            services.AddSingleton<LyricPlayer>();
 
             //ViewModel
             services.AddSingleton<MusicListViewModel>();

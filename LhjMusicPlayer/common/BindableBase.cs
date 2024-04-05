@@ -6,7 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LhjMusicPlayer.common
+namespace LhjMusicPlayer.Common
 {
     [Windows.Foundation.Metadata.WebHostHidden]
     public abstract class BindableBase : INotifyPropertyChanged

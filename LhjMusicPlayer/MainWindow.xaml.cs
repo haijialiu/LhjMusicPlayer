@@ -48,10 +48,11 @@ namespace LhjMusicPlayer
         public static int MinWindowHeight { get; set; } = 850;
         //public static int MaxWindowHeight { get; set; } = 1600;
 
-
+        public static MainWindow? mainWindow;
         public MainWindow()
         {
             this.InitializeComponent();
+            mainWindow = this;
             Activated += MainWindow_Activated;
             RegisterWindowMinMax(this);
             ExtendsContentIntoTitleBar = true;

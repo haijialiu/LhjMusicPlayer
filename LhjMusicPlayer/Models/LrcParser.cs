@@ -18,7 +18,7 @@ namespace LhjMusicPlayer.Models
         {
             Dictionary<string,string> metadata = [];
             List<LrcWord> words = [];
-            using (FileStream fs = new FileStream(path,FileMode.Open,FileAccess.Read,FileShare.Read))
+            using (FileStream fs = new(path,FileMode.Open,FileAccess.Read,FileShare.Read))
             {
                 string? line;
                 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -45,12 +45,14 @@ namespace LhjMusicPlayer.Models
                 }
                 fs.Close();
             }
-            Lrc lrc = new(metadata["ti"], metadata["offset"])
+            Lrc lrc = new()
             {
-                Artist = metadata["ar"],
-                Album = metadata["al"],
-                LrcBy = metadata["by"],
-                Words = words,
+                Title = metadata.GetValueOrDefault("ti"),
+                Offset = metadata.GetValueOrDefault("offset"),
+                Artist = metadata.GetValueOrDefault("ar"),
+                Album = metadata.GetValueOrDefault("al"),
+                LrcBy = metadata.GetValueOrDefault("by"),
+                Words = new System.Collections.ObjectModel.ObservableCollection<LrcWord>(words),
             };
             return lrc;
         }

@@ -111,6 +111,7 @@ int music_time()
 //专辑图片
 static album_info media_album_png()
 {
+	album_info info{ 0 };
 	using namespace std;
 	if (video_index < 0)
 		return info;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using LhjMusicPlayer.common;
+using LhjMusicPlayer.Common;
 using System;
 using System.Collections.Generic;
 using System.IO;

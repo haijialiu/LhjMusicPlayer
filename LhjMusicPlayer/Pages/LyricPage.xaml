@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="LhjMusicPlayer.Views.LyricPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LhjMusicPlayer.Views"
+    xmlns:controls="using:LhjMusicPlayer.UserControls"
+    xmlns:models="using:LhjMusicPlayer.Models"
+    xmlns:utils="using:LhjMusicPlayer.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Page.Resources>
+        <utils:ByteArrayToBitmapImage x:Key="bytes_bitmapimage_coverter"/>
+    </Page.Resources>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="5*"/>
+        </Grid.RowDefinitions>
+
+        <Button Grid.Column="0" Grid.Row="0" FontFamily="Segoe MDL2 Assets"
+                    RelativePanel.AlignLeftWithPanel="True"
+                    RelativePanel.AlignTopWithPanel="True"
+                    Content="&#xE70D;"
+                Margin="20,20,0,0" BorderThickness="0" 
+                Background="Transparent" FontSize="15"
+                Click="Back_Button_Click" />
+        <RelativePanel Grid.Column="0" Grid.Row="1">
+
+
+            <Image Stretch="UniformToFill" 
+                   RelativePanel.AlignHorizontalCenterWithPanel="True"
+                   RelativePanel.AlignVerticalCenterWithPanel="True"
+                   x:Name="album_image"  
+                   Source="{x:Bind player.CurrentMusic.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
+                    Height="500" Width="500" />
+        </RelativePanel>
+        <controls:LyricControl Grid.Column="1" Grid.Row="1"/>
+    </Grid>
+</Page>

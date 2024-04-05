@@ -72,4 +72,16 @@ namespace LhjMusicPlayer.Utils
             throw new NotImplementedException();
         }
     }
+    public class LyricToWords : ICoverterBase
+    {
+        public object? Convert(object value, Type targetType, object parameter, string language)
+        {
+            return ((Lrc)value).Words;
+        }
+
+        public object? ConvertBack(object value, Type targetType, object parameter, string language)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

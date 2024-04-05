@@ -1,5 +1,7 @@
-﻿using System;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
@@ -7,14 +9,13 @@ using System.Threading.Tasks;
 
 namespace LhjMusicPlayer.Models
 {
-    public class Lrc(string title, string offset)
+    public partial class Lrc : ObservableObject
     {
 
         /// <summary>
         /// 歌曲
         /// </summary>
-        public string Title { get; set; } = title;
-        /// <summary>
+        public string? Title { get; set; }
         /// 艺术家
         /// </summary>
         public string? Artist { get; set; }
@@ -29,14 +30,19 @@ namespace LhjMusicPlayer.Models
         /// <summary>
         /// 偏移量
         /// </summary>
-        public string Offset { get; set; } = offset;
+        public string? Offset { get; set; }
+        //public OrderedDictionary LrcWords = [];
+        public ObservableCollection<LrcWord> Words = [];
 
-        public OrderedDictionary LrcWords = [];
-        public List<LrcWord> Words = [];
     }
-    public record LrcWord(double Time,string? Word)
+    public record LrcWord(double Time,string? Word): IComparable<LrcWord>
     {
         public double Time { get; set; } = Time;
         public string? Word { get; set; } = Word;
+
+        public int CompareTo(LrcWord? other)
+        {
+            return Time.CompareTo(other?.Time);
+        }
     }
 }

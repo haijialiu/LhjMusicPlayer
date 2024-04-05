@@ -1,6 +1,7 @@
-using LhjMusicPlayer.common;
+using LhjMusicPlayer.Common;
 using LhjMusicPlayer.Models;
 using LhjMusicPlayer.ViewModels;
+using LhjMusicPlayer.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
@@ -28,44 +29,13 @@ namespace LhjMusicPlayer.UserControls
     {
         public MusicListViewModel ViewModel => (MusicListViewModel)DataContext;
         public MusicPlayer player;
-        private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
-        private readonly TimeSpan span = TimeSpan.FromMilliseconds(100);
-        private readonly ThreadPoolTimer threadPoolTimer;
-        private bool spyPlayer = true;
-        private bool manSet = false;
+
         public PlayerControl()
         {
             DataContext = App.Current.Services.GetService<MusicListViewModel>();
             player = App.Current.Services.GetRequiredService<MusicPlayer>();
             this.InitializeComponent();
-            Unloaded += PlayControllerCloseEvent;
-            threadPoolTimer = ThreadPoolTimer.CreatePeriodicTimer((source) =>
-            {
-                if (spyPlayer)
-                {
-                    var current_index = FFmpegPlayer.CurrentPlayIndex();
-                    var current_play_time = FFmpegPlayer.PlayedTime();
-                    if (dispatcherQueue.HasThreadAccess)
-                    {
 
-                    }
-                    else
-                    {
-                        bool isQueued = dispatcherQueue.TryEnqueue(() =>
-                        {
-                            //修改值会触发onChanged 刷新UI
-                            player.CurrentPlayIndex = current_index;
-                            player.CurrentTime = FFmpegPlayer.PlayedTime();
-
-                        });
-                    }
-                }
-
-            }, span);
-        }
-        private void PlayControllerCloseEvent(object sender, RoutedEventArgs e)
-        {
-            threadPoolTimer.Cancel();
         }
         private void Play_Button_Click(object sender, RoutedEventArgs e)
         {
@@ -78,27 +48,36 @@ namespace LhjMusicPlayer.UserControls
                 MusicPlayer.Operate("resume", "1");
             }
             player.PlayStatus = !player.PlayStatus;
+
         }
         private void Prev_Button_Click(object sender, RoutedEventArgs e)
         {
-            player.CurrentPlayIndex -= 1;
-            MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
+            //player.CurrentPlayIndex -= 1;
+            MusicPlayer.Operate("switch", (player.CurrentPlayIndex-1).ToString());
         }
         private void Next_Button_Click(object sender, RoutedEventArgs e)
         {
-            player.CurrentPlayIndex += 1;
-            MusicPlayer.Operate("switch", player.CurrentPlayIndex.ToString());
+            //player.CurrentPlayIndex += 1;
+            MusicPlayer.Operate("switch", (player.CurrentPlayIndex+1).ToString());
+        }        
+        private void Lyric_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+            if(MainWindow.mainWindow?.MainFrame.BackStack.Count>0)
+                MainWindow.mainWindow?.MainFrame.GoBack();
+            else
+                MainWindow.mainWindow?.MainFrame.Navigate(typeof(LyricPage));
+
         }
         private void play_progress_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
-            spyPlayer = false;
+            ViewModel.spyPlayer = false;
         }
 
         private void play_progress_ManipulationCompleted(object sender, ManipulationCompletedRoutedEventArgs e)
         {
             MusicPlayer.Operate("seek", ((Slider)sender).Value.ToString());
-            spyPlayer = true;
-            manSet = true;
+            ViewModel.spyPlayer = true;
         }
 
     }

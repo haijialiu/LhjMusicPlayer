@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<UserControl
+    x:Class="LhjMusicPlayer.UserControls.LyricControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LhjMusicPlayer.UserControls"
+    xmlns:utils="using:LhjMusicPlayer.Utils"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="using:LhjMusicPlayer.Models"
+    d:DataContext="{d:DesignInstance Type=models:LyricPlayer}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <utils:LyricToWords x:Key="lryic_to_words"/>
+
+    </UserControl.Resources>
+    <Grid>
+
+        <ListView 
+            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+            x:Name="LyricList"
+            SelectionMode="Single"
+            ItemsSource="{x:Bind lyricPlayer.Words,Mode=OneWay}"
+            >
+
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="ListViewItem">
+                                <ListViewItemPresenter 
+   
+                                    x:Name="lyric_item"
+                                    Foreground="LightGray">
+                                    <VisualStateManager.VisualStateGroups>
+                                        <VisualStateGroup x:Name="CommonStates">
+                                            <!--<VisualState>
+                                                <VisualState.StateTriggers>
+                                                    
+                                                </VisualState.StateTriggers>
+                                            </VisualState>-->
+                                            <VisualState x:Name="Normal">
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="30"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="Selected">
+                                                
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="60"/>
+                                                    <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOver">
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="30"/>
+                                                    <Setter Target="lyric_item.Foreground" Value="#00BFFF"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerExited">
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.Foreground" Value="#00BFFF"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                        </VisualStateGroup>
+
+                                    </VisualStateManager.VisualStateGroups>
+                                </ListViewItemPresenter>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:LrcWord">
+                    <ListViewItem Margin="0,5,0,5" 
+                                  
+                                          IsDoubleTapEnabled="True"
+                                          DoubleTapped="ListViewItem_DoubleTapped" >
+                        <TextBlock x:Name="lyric_word"
+                                   TextAlignment="Center" 
+                                   TextWrapping="Wrap"
+                                   Text="{x:Bind Word}"/>
+                        </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</UserControl>

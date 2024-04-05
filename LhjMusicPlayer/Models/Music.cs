@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.UI.Xaml.Media.Imaging;
-using LhjMusicPlayer.common;
+using LhjMusicPlayer.Common;
 using LhjMusicPlayer.Models.Database;
 using System;
 using System.Collections.Generic;

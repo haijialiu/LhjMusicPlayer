@@ -9,11 +9,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.ComponentModel;
 
 namespace LhjMusicPlayer.Models
 {
     [EntityTypeConfiguration(typeof(MusicListEntityTypeConfiguration))]
-    public class MusicList
+    public partial class MusicList : ObservableObject
     {
         [Column(Order = 0)]
         public int Id { get; set; }
@@ -27,6 +28,14 @@ namespace LhjMusicPlayer.Models
         public DateTime CreatedTime { get; set; }
 
         public List<Music> Musics { get; set; } = [];
+
+        public void RemoveMusic(int MusicListId,int MusicId)
+        {
+            using var context = new DataContext();
+            context.MusicMusicLists.Remove(new MusicMusicList() { MusicListId = MusicListId,MusicId=MusicId });
+            context.SaveChanges();
+            Musics.RemoveAt(MusicId);
+        }
     }
     public class MusicListEntityTypeConfiguration : IEntityTypeConfiguration<MusicList>
     {

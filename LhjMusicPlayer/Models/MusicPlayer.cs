@@ -1,6 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
-using LhjMusicPlayer.common;
+using LhjMusicPlayer.Common;
 using LhjMusicPlayer.ViewModels;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,7 +16,7 @@ namespace LhjMusicPlayer.Models
         //播放列表
         public ObservableCollection<Music> PlayList { get; set; } = [];
         //当前播放歌曲的序号
-        private int currentIndex = 0;
+        private int currentIndex = -1;
 
         public int CurrentPlayIndex
         {
@@ -53,7 +53,9 @@ namespace LhjMusicPlayer.Models
                             currentLyricFilePath = CurrentMusic.LyricFilePath;
                             //CurrentLyric = LrcParser.GetLrcFromFile(CurrentMusic.LyricFilePath);
                             //LoadLyric(currentLyricFilePath);
-                            Task.Run(() => { CurrentLyric = LrcParser.GetLrcFromFile(currentLyricFilePath); });
+                            Task.Run(() => { 
+                                CurrentLyric = LrcParser.GetLrcFromFile(currentLyricFilePath);
+                            });
                         }
                     }
                 }

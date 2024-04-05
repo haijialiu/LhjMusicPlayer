@@ -1,3 +1,4 @@
+using LhjMusicPlayer.Views;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -26,6 +27,20 @@ namespace LhjMusicPlayer.Pages
         public MainPage()
         {
             this.InitializeComponent();
+        }
+        private void MainNavition_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
+        {
+
+            NaviHeader.Text = args.InvokedItem.ToString();
+            if (args.InvokedItemContainer.Tag.ToString() == "MusicList")
+            {
+                //using var context = new DataContext();
+                var id = int.Parse(args.InvokedItemContainer.DataContext.ToString()!);
+                //var musicList = context.MusicList.Include(list => list.Musics).Single(list => list.Id == id).Musics;
+                //ViewModel.SetMusics(musicList);
+                contentFrame.Navigate(typeof(MusicListPage), id);
+            }
+
         }
     }
 }
