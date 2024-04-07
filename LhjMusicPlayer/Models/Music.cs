@@ -18,6 +18,7 @@ namespace LhjMusicPlayer.Models
 {
     [Table("musics")]
     [Comment("音乐库")]
+    [Index(nameof(FilePath),IsUnique = true)]
     [EntityTypeConfiguration(typeof(MusicEntityTypeConfiguration))]
     [method: SetsRequiredMembers]
     public class Music(string title, string filePath)
@@ -58,6 +59,62 @@ namespace LhjMusicPlayer.Models
         }
 
         public List<MusicList> MusicLists { get; set; } = [];
+
+        public static List<Music> SearchMusicsFromFolder(string folderPath)
+        {
+            using var context = new DataContext();
+            var list = new List<Music>();
+            var files_path = Directory.GetFiles(folderPath);
+
+            foreach (var file_path in files_path)
+            {
+                if(File.Exists(file_path))
+                {
+                    var music = MediaInfo.GetMusic(file_path);
+                    if(music != null)
+                    {
+                        var lrcPath = Path.Combine(Path.GetDirectoryName(file_path)!, Path.GetFileNameWithoutExtension(file_path) + ".lrc");
+                        if(File.Exists(lrcPath))
+                        {
+                            music.LyricFilePath = lrcPath;
+                        }
+                        list.Add(music);
+                    }
+                }
+            }
+            return list;
+        }
+        public static void LoadLocalMusics(string folderPath)
+        {
+            using var context = new DataContext();
+            var files_path = Directory.GetFiles(folderPath);
+            var local = context.MusicList.Single(list => list.Title == "local");
+            var love = context.MusicList.Single(list => list.Title == "loving");
+            var playing = context.MusicList.Single(list => list.Title == "playing");
+            foreach (var file_path in files_path)
+            {
+                if (context.Musics.SingleOrDefault(m => m.FilePath == file_path) != null)
+                    continue;
+                if (File.Exists(file_path))
+                {
+                    var music = MediaInfo.GetMusic(file_path);
+                    if (music != null)
+                    {
+
+                        var lrcPath = Path.Combine(Path.GetDirectoryName(file_path)!, Path.GetFileNameWithoutExtension(file_path) + ".lrc");
+                        if (File.Exists(lrcPath))
+                        {
+                            music.LyricFilePath = lrcPath;
+                        }
+                        context.Musics.Add(music);
+                        local.Musics.Add(music);
+                        love.Musics.Add(music);
+                        playing.Musics.Add(music);
+                    }
+                }
+            }
+            context.SaveChanges();
+        }
     }
     public class MusicEntityTypeConfiguration : IEntityTypeConfiguration<Music>
     {

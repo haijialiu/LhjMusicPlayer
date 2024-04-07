@@ -30,7 +30,9 @@ namespace LhjMusicPlayer.UserControls
             DataContext = App.Current.Services.GetService<MusicListViewModel>();
             player = App.Current.Services.GetRequiredService<MusicPlayer>();
             this.InitializeComponent();
+            
         }
+
         private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
 
@@ -43,6 +45,12 @@ namespace LhjMusicPlayer.UserControls
         private void Playing_list_Loaded(object sender, RoutedEventArgs e)
         {
             playing_list.SelectedIndex = player.CurrentPlayIndex;
+            playing_list.ScrollIntoView(playing_list.Items[player.CurrentPlayIndex]);
+        }
+
+        private void Remove_Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

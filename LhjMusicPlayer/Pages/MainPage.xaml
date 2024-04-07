@@ -8,6 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    NavigationCacheMode="Enabled"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
     <Grid>
@@ -15,16 +16,18 @@
         <NavigationView  x:Name="MainNavition" 
              ItemInvoked="MainNavition_ItemInvoked"
              IsSettingsVisible="False"
+             IsBackEnabled="{x:Bind contentFrame.CanGoBack,Mode=OneWay}"
+                         BackRequested="MainNavition_BackRequested"
              OpenPaneLength="300">
 
 
             <NavigationView.Header>
                 <TextBlock TextAlignment="Start" x:Name="NaviHeader" Text="主页"/>
             </NavigationView.Header>
-
+ 
             <NavigationView.MenuItems>
                 <NavigationViewItemHeader Content="我的音乐"/>
-                <NavigationViewItem Icon="Home" Content="主页" Tag="MainPage"/>
+                <NavigationViewItem Icon="Home" Content="主页" Tag="HomePage"/>
                 <NavigationViewItem Icon="Favorite" Content="我喜欢" Tag="MusicList" DataContext="2" />
                 <NavigationViewItem Icon="Download" Content="本地音乐" Tag="MusicList" DataContext="1"/>
                 <NavigationViewItemHeader Content="自建歌单"/>

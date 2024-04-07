@@ -66,17 +66,17 @@
         <!--右侧的模式控制、声音控制、播放列表-->
         <StackPanel x:Name="right_bar" Orientation="Horizontal"
                     RelativePanel.AlignRightWithPanel="True"
-                    RelativePanel.AlignVerticalCenterWithPanel="True">   
+                    RelativePanel.AlignVerticalCenterWithPanel="True">
 
-    <!--播放列表-->
-    <Button Background="Transparent" BorderThickness="0" FontSize="40" FontFamily="Segoe MDL2 Assets" Content="&#xEA37;" >
-        <Button.Flyout>
-             <Flyout>
-                 <control:PlayingListControl/>
-             </Flyout>
-        </Button.Flyout>
-    </Button>
-</StackPanel>
+            <!--播放列表-->
+            <Button Background="Transparent" BorderThickness="0" FontSize="40" FontFamily="Segoe MDL2 Assets" Content="&#xEA37;" >
+                <Button.Flyout>
+                    <Flyout>
+                        <control:PlayingListControl/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+        </StackPanel>
 
     </RelativePanel>
 </UserControl>

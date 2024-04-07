@@ -35,8 +35,14 @@ namespace LhjMusicPlayer.UserControls
             DataContext = App.Current.Services.GetService<MusicListViewModel>();
             player = App.Current.Services.GetRequiredService<MusicPlayer>();
             this.InitializeComponent();
-
+            Unloaded += PlayerControl_Unloaded;
         }
+
+        private void PlayerControl_Unloaded(object sender, RoutedEventArgs e)
+        {
+            ViewModel.threadPoolTimer.Cancel();
+        }
+
         private void Play_Button_Click(object sender, RoutedEventArgs e)
         {
             if (player.PlayStatus)

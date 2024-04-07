@@ -27,6 +27,7 @@ namespace LhjMusicPlayer.Pages
         public MainPage()
         {
             this.InitializeComponent();
+            contentFrame.Navigate(typeof(HomePage));
         }
         private void MainNavition_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
@@ -39,8 +40,16 @@ namespace LhjMusicPlayer.Pages
                 //var musicList = context.MusicList.Include(list => list.Musics).Single(list => list.Id == id).Musics;
                 //ViewModel.SetMusics(musicList);
                 contentFrame.Navigate(typeof(MusicListPage), id);
+            } else if(args.InvokedItemContainer.Tag.ToString() == "HomePage")
+            {
+                contentFrame.Navigate(typeof(HomePage));
             }
 
+        }
+
+        private void MainNavition_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
+        {
+            contentFrame.GoBack();
         }
     }
 }

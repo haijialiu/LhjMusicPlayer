@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace LhjMusicPlayer.Models
 {
-    public partial class Lrc : ObservableObject
+    public partial class Lrc : Lyric
     {
 
         /// <summary>

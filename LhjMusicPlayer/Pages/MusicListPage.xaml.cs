@@ -22,6 +22,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Collections.ObjectModel;
+using Windows.ApplicationModel.Contacts;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -36,7 +37,8 @@ namespace LhjMusicPlayer.Views
 
         private MusicListViewModel ViewModel => (MusicListViewModel)DataContext;
         private MusicPlayer player;
-        private ObservableCollection<Music>? musics;
+        private ObservableCollection<Music> musics = [];
+        private ObservableCollection<Music> filtedmusics = [];
         private int musicListId = -1;
         public MusicListPage()
         {
@@ -53,6 +55,7 @@ namespace LhjMusicPlayer.Views
                 musicListId = id;
                 var musicList = ViewModel.MusicLists.FirstOrDefault(list => list.Id == id)!.Musics;
                 musics = new ObservableCollection<Music>(musicList);
+                filtedmusics = new ObservableCollection<Music>(musics);
             }
         }
 
@@ -69,7 +72,8 @@ namespace LhjMusicPlayer.Views
 
         private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
-            var musicIndex = music_list.SelectedIndex;
+            int id = (int)((ListViewItem)sender).Tag;
+            var musicIndex = ViewModel.PlayingList.IndexOf(ViewModel.PlayingList.Single(music=>music.Id==id));
             MusicPlayer.Operate("switch", musicIndex.ToString());
             player.PlayStatus = true;
         }
@@ -87,6 +91,44 @@ namespace LhjMusicPlayer.Views
         public static string TimeFormat(int seconds)
         {
             return string.Format("{0}:{1}", seconds/60,seconds%60);
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(sender is TextBox textBox)
+            {
+                var text = textBox.Text;
+                if (text == "")
+                {
+                    filtedmusics.Clear();
+                    for(int i = 0; i < musics.Count;i++)
+                    {
+                        filtedmusics.Add(musics[i]);
+                    }
+                    return;
+                }
+                var filtered = musics.Where(content => content.Title.Contains(text));
+                for(int i = filtedmusics.Count - 1; i >= 0; i--)
+                {
+                    var item = filtedmusics[i];
+                    if(!filtered.Contains(item))
+                    {
+                        filtedmusics.Remove(item);
+                    }
+                }
+
+                foreach (var item in filtered)
+                {
+
+                    if(!filtedmusics.Contains(item))
+                    {
+                        filtedmusics.Add(item);
+                    }
+                }
+
+            }
+
+                          
         }
 
 

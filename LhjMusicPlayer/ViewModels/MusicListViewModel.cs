@@ -21,7 +21,7 @@ namespace LhjMusicPlayer.ViewModels
         //public static MusicListViewModel GetIntance() => instance;
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         private readonly TimeSpan span = TimeSpan.FromMilliseconds(100);
-        private readonly ThreadPoolTimer threadPoolTimer;
+        public readonly ThreadPoolTimer threadPoolTimer;
         public bool spyPlayer = true;
         public bool mainLyricPage = false;
         public MusicListViewModel()
@@ -84,10 +84,6 @@ namespace LhjMusicPlayer.ViewModels
 
 
 
-        }
-        ~MusicListViewModel()
-        {
-            threadPoolTimer.Cancel();
         }
 
         public void ReplacePlayingList(int listId)

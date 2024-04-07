@@ -64,6 +64,9 @@ namespace LhjMusicPlayer.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("FilePath")
+                        .IsUnique();
+
                     b.ToTable("musics", t =>
                         {
                             t.HasComment("音乐库");

@@ -34,18 +34,31 @@
                                     Foreground="LightGray">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
-                                            <!--<VisualState>
+                                            <VisualState>
                                                 <VisualState.StateTriggers>
-                                                    
+
                                                 </VisualState.StateTriggers>
-                                            </VisualState>-->
+                                            </VisualState>
+
                                             <VisualState x:Name="Normal">
                                                 <VisualState.Setters>
                                                     <Setter Target="lyric_item.FontSize" Value="30"/>
                                                 </VisualState.Setters>
                                             </VisualState>
                                             <VisualState x:Name="Selected">
-                                                
+
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="60"/>
+                                                    <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerOverSelected">
+                                                <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="60"/>
+                                                    <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
+                                                </VisualState.Setters>
+                                            </VisualState>
+                                            <VisualState x:Name="PointerPressedSelected">
                                                 <VisualState.Setters>
                                                     <Setter Target="lyric_item.FontSize" Value="60"/>
                                                     <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
@@ -81,7 +94,7 @@
                                    TextAlignment="Center" 
                                    TextWrapping="Wrap"
                                    Text="{x:Bind Word}"/>
-                        </ListViewItem>
+                    </ListViewItem>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

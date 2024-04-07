@@ -14,7 +14,7 @@ namespace LhjMusicPlayer.Models
 
 
 
-        public static Lrc GetLrcFromFile(string path)
+        public static Lrc? GetLrcFromFile(string path)
         {
             Dictionary<string,string> metadata = [];
             List<LrcWord> words = [];
@@ -35,7 +35,8 @@ namespace LhjMusicPlayer.Models
                     {
                         double time = TimeSpan.Parse("00:" + m2.Groups[1].Value).TotalSeconds;
                         string word = m2.Groups[2].Value;
-                        words.Add(new(time,word));
+
+                        words.Add(new(time, System.Net.WebUtility.HtmlDecode(word)));
                     }
                     else if (m1.Success)
                     {
@@ -45,6 +46,8 @@ namespace LhjMusicPlayer.Models
                 }
                 fs.Close();
             }
+            if (words.Count == 0 && metadata.Count == 0)
+                return null;
             Lrc lrc = new()
             {
                 Title = metadata.GetValueOrDefault("ti"),
@@ -65,7 +68,7 @@ namespace LhjMusicPlayer.Models
         private static partial Regex LrcMetadataRegex();
         //[GeneratedRegex(@"^\[([0-9.:]*)\]+(.*)$", RegexOptions.Compiled)]
         [GeneratedRegex(@"^\[([0-9]{2}:[0-9]{2}\.[0-9]{2})\]+(.*)$", RegexOptions.Compiled)]
-        private static partial Regex LrcWordsRegex();        
+        private static partial Regex LrcWordsRegex();                  
     }
 
 }

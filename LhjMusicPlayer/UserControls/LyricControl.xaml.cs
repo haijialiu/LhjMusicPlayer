@@ -86,7 +86,7 @@ namespace LhjMusicPlayer.UserControls
         private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
 
-            //MusicPlayer.Operate("seek", ((LrcWord)((ListViewItem)sender).DataContext).Time.ToString());
+            MusicPlayer.Operate("seek", ((LrcWord)((ListViewItem)sender).DataContext).Time.ToString());
         }
 
         private void LyricList_ItemClick(object sender, ItemClickEventArgs e)
