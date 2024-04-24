@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.System.Threading;
+using Windows.UI.Core;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -33,8 +34,11 @@ namespace LhjMusicPlayer.UserControls
         private readonly LyricPlayer lyricPlayer;
         private readonly DispatcherQueue dispatcherQueue = DispatcherQueue.GetForCurrentThread();
         private readonly TimeSpan span = TimeSpan.FromMilliseconds(100);
+        private readonly TimeSpan period = TimeSpan.FromSeconds(5);
         private readonly ThreadPoolTimer threadPoolTimer;
+        private ThreadPoolTimer PeriodicTimer;
         private int currentIndex = 0;
+        private bool mainScroll = false;
         public LyricControl()
         {
             
@@ -59,13 +63,21 @@ namespace LhjMusicPlayer.UserControls
                     {
                         if (lyricPlayer.Lyric != null)
                         {
-                            if (lyricPlayer.CurrentLyricIndex + 8 < lyricPlayer.Words.Count)
+                            if (!mainScroll)
                             {
-                                LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex + 8]);
-                            }
-                            else if(LyricList.Items.Count > 0)
-                            {
-                                LyricList.ScrollIntoView(lyricPlayer.Words[^1]);
+                                if (lyricPlayer.CurrentLyricIndex + 8 < lyricPlayer.Words.Count)
+                                {
+                                    if (lyricPlayer.CurrentLyricIndex - 6 >= 0)
+                                    {
+                                        LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex - 6]);
+                                    }
+                                    LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex],ScrollIntoViewAlignment.Default);
+                                    LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex + 8]);
+                                }
+                                else if (LyricList.Items.Count > 0)
+                                {
+                                    LyricList.ScrollIntoView(lyricPlayer.Words[^1]);
+                                }
                             }
                             if (lyricPlayer.CurrentLyricIndex != -1 && lyricPlayer.CurrentLyricIndex < LyricList.Items.Count)
                             {
@@ -78,6 +90,14 @@ namespace LhjMusicPlayer.UserControls
 
                 }
             }, span);
+            PeriodicTimer = ThreadPoolTimer.CreatePeriodicTimer((source) =>
+            {
+                if (mainScroll)
+                {
+                    mainScroll = false;
+                }
+            }, period);
+
         }
         private void LyricControllerCloseEvent(object sender, RoutedEventArgs e)
         {
@@ -92,6 +112,24 @@ namespace LhjMusicPlayer.UserControls
         private void LyricList_ItemClick(object sender, ItemClickEventArgs e)
         {
 
+        }
+
+
+        private void LyricScroll_ViewChanging(object sender, ScrollViewerViewChangingEventArgs e)
+        {
+            //Your logic to hide the button
+            mainScroll = true;
+        }
+
+        private void ListViewItem_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            Border? border = VisualTreeHelper.GetChild(LyricList, 0) as Border;
+            ScrollViewer? scrollViewer = VisualTreeHelper.GetChild(border, 0) as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                scrollViewer.ViewChanging += LyricScroll_ViewChanging!;
+                
+            }
         }
     }
 }

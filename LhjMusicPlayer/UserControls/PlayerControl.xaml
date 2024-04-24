@@ -25,9 +25,12 @@
                  RelativePanel.AlignVerticalCenterWithPanel="True"
                  >
             <!--专辑图片-->
-            <Button Background="Transparent" Click="Lyric_Button_Click">
-                <Image Stretch="UniformToFill" x:Name="album_image"  Source="{x:Bind player.CurrentMusic.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
+            <Button Background="Transparent" BorderThickness="0" Click="Lyric_Button_Click" >
+                <Grid>
+                    <Image Stretch="UniformToFill" x:Name="album_image"  Source="{x:Bind player.CurrentMusic.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
                     Height="100" Width="100" />
+                    <FontIcon x:Name="AlbumButtonStatus" Glyph="&#xE740;" FontSize="100" FontWeight="Light" Foreground="#DCDCDC" Opacity="0.4"/>
+                </Grid>
             </Button>
             <StackPanel>
                 <!--歌名-->
@@ -68,8 +71,27 @@
                     RelativePanel.AlignRightWithPanel="True"
                     RelativePanel.AlignVerticalCenterWithPanel="True">
 
+            <!--评论-->
+            <Button Background="Transparent"  Margin="20,0,20,0" BorderThickness="0">
+                <Grid>
+                    <FontIcon Glyph="&#xE90A;" FontSize="40"/>
+                    <TextBlock x:Name="CommentCount" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="2,7,0,0">999+</TextBlock>
+                </Grid>
+            </Button>
+            
+            <!--歌词-->
+            <Button Background="Transparent" BorderThickness="0"
+                    Margin="20,0,20,0"
+                    FontSize="40"
+                    Click="Lyric_Window_Button_Click">
+                <Grid>
+                    <FontIcon FontFamily="Segoe Fluent Icons" Glyph="&#xE739;" FontSize="40"/>
+                    <TextBlock Text="词" FontSize="30" Margin="0,0,0,4" TextAlignment="Center"/>
+                </Grid>
+            </Button>
             <!--播放列表-->
-            <Button Background="Transparent" BorderThickness="0" FontSize="40" FontFamily="Segoe MDL2 Assets" Content="&#xEA37;" >
+            <Button Background="Transparent" BorderThickness="0" Margin="20,0,20,0" FontSize="40" FontFamily="Segoe MDL2 Assets" Content="&#xEA37;" >
+
                 <Button.Flyout>
                     <Flyout>
                         <control:PlayingListControl/>

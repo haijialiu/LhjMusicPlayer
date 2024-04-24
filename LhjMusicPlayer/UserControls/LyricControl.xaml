@@ -29,7 +29,7 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
                                 <ListViewItemPresenter 
-   
+                                    
                                     x:Name="lyric_item"
                                     Foreground="LightGray">
                                     <VisualStateManager.VisualStateGroups>
@@ -58,20 +58,21 @@
                                                     <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
                                                 </VisualState.Setters>
                                             </VisualState>
-                                            <VisualState x:Name="PointerPressedSelected">
+                                            <!--<VisualState x:Name="PointerPressedSelected">
                                                 <VisualState.Setters>
                                                     <Setter Target="lyric_item.FontSize" Value="60"/>
                                                     <Setter Target="lyric_item.Foreground" Value="#FFDAB9"/>
                                                 </VisualState.Setters>
-                                            </VisualState>
+                                            </VisualState>-->
                                             <VisualState x:Name="PointerOver">
                                                 <VisualState.Setters>
                                                     <Setter Target="lyric_item.FontSize" Value="30"/>
                                                     <Setter Target="lyric_item.Foreground" Value="#00BFFF"/>
                                                 </VisualState.Setters>
                                             </VisualState>
-                                            <VisualState x:Name="PointerExited">
+                                            <VisualState x:Name="PointerPressed">
                                                 <VisualState.Setters>
+                                                    <Setter Target="lyric_item.FontSize" Value="30"/>
                                                     <Setter Target="lyric_item.Foreground" Value="#00BFFF"/>
                                                 </VisualState.Setters>
                                             </VisualState>
@@ -86,14 +87,17 @@
             </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:LrcWord">
-                    <ListViewItem Margin="0,5,0,5" 
-                                  
-                                          IsDoubleTapEnabled="True"
-                                          DoubleTapped="ListViewItem_DoubleTapped" >
-                        <TextBlock x:Name="lyric_word"
-                                   TextAlignment="Center" 
-                                   TextWrapping="Wrap"
-                                   Text="{x:Bind Word}"/>
+                    <ListViewItem 
+                        Margin="0,5,0,5" 
+                        IsDoubleTapEnabled="True"
+                        DoubleTapped="ListViewItem_DoubleTapped"
+                        PointerEntered="ListViewItem_PointerEntered">
+                        
+                        <TextBlock
+                            x:Name="lyric_word"
+                            TextAlignment="Center" 
+                            TextWrapping="Wrap"
+                            Text="{x:Bind Word}"/>
                     </ListViewItem>
                 </DataTemplate>
             </ListView.ItemTemplate>

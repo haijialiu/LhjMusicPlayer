@@ -69,11 +69,17 @@ namespace LhjMusicPlayer.UserControls
         private void Lyric_Button_Click(object sender, RoutedEventArgs e)
         {
 
-            if(MainWindow.mainWindow?.MainFrame.BackStack.Count>0)
+            if (MainWindow.mainWindow?.MainFrame.BackStack.Count > 0)
+            {
                 MainWindow.mainWindow?.MainFrame.GoBack();
+                AlbumButtonStatus.Glyph = "\uE740";
+            }
             else
+            {
                 MainWindow.mainWindow?.MainFrame.Navigate(typeof(LyricPage));
-
+                //FontIcon icon = new FontIcon(); icon.Glyph = "\uE73F";
+                AlbumButtonStatus.Glyph = "\uE73F";
+            }
         }
         private void play_progress_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)
         {
@@ -86,5 +92,9 @@ namespace LhjMusicPlayer.UserControls
             ViewModel.spyPlayer = true;
         }
 
+        private void Lyric_Window_Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
