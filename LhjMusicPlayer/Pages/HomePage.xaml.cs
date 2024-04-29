@@ -21,11 +21,14 @@ namespace LhjMusicPlayer.Pages
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class HomePage : Page
+    public sealed partial class HomePage : Page,ISubPage
     {
+
         public HomePage()
         {
             this.InitializeComponent();
         }
+
+        public string? NavTitle => null;
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Dispatching;
 using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Media.Imaging;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -15,7 +16,7 @@ using Windows.System.Threading;
 
 namespace LhjMusicPlayer.ViewModels
 {
-    public sealed class MusicListViewModel : ObservableRecipient
+    public sealed partial class MusicListViewModel : ObservableRecipient
     {
         //private static readonly MusicListViewModel instance= new();
         //public static MusicListViewModel GetIntance() => instance;
@@ -24,6 +25,10 @@ namespace LhjMusicPlayer.ViewModels
         public readonly ThreadPoolTimer threadPoolTimer;
         public bool spyPlayer = true;
         public bool mainLyricPage = false;
+
+        [ObservableProperty]
+        private BitmapImage? currentAlbum;
+
         public MusicListViewModel()
         {
             //Init();
@@ -52,7 +57,6 @@ namespace LhjMusicPlayer.ViewModels
                     var current_play_time = FFmpegPlayer.PlayedTime();
                     if (dispatcherQueue.HasThreadAccess)
                     {
-
                     }
                     else
                     {
@@ -64,7 +68,6 @@ namespace LhjMusicPlayer.ViewModels
                                 Player.CurrentPlayIndex = current_index;
                                 if (Player.CurrentMusic?.LyricFilePath != null)
                                 {
-
                                     LyricPlayer.LoadLyric(Player.CurrentMusic.LyricFilePath);
                                 }
                                 else
@@ -76,14 +79,9 @@ namespace LhjMusicPlayer.ViewModels
                             Player.CurrentTime = current_play_time;
 
                         });
-
                     }
                 }
-
             }, span);
-
-
-
         }
 
         public void ReplacePlayingList(int listId)

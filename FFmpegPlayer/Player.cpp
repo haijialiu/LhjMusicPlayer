@@ -51,10 +51,8 @@ void media::Player::set_play_list(const std::vector<std::string>& music_urls)
 //控制器
 int media::Player::operate(std::string action, std::string value)
 {
-
 	if (action == "switch")
 	{
-
 		play_status = true;
 		int index = std::stoi(value);
 		switch_next(index);
@@ -62,22 +60,18 @@ int media::Player::operate(std::string action, std::string value)
 	else if (action == "pause")
 	{
 		pause();
-
 	}
 	else if (action == "resume")
 	{
-
 		resume();
 	}
 	else if (action == "play_mode")
 	{
-
 		int mode = std::stoi(value);
 		if (mode >= 0 && mode <= 2)
 			play_mode = mode;
 		else
 		{
-			//Log::debug("模式选择有误");
 			return -1;
 		}
 	}
@@ -108,10 +102,7 @@ int media::Player::operate(std::string action, std::string value)
 		{
 			_abort = true;
 		}
-
 	}
-	//TODO: 更换歌单不在此操作，在外部更换
-
 	if (first.load())
 	{
 		first = false;

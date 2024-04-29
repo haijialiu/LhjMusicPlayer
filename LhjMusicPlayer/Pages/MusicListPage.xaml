@@ -11,7 +11,7 @@
     d:DataContext="{d:DesignInstance Type=models:Music}"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
-    Background="Transparent">
+    >
     <Page.Resources>
         <utils:ByteArrayToBitmapImage x:Key="bytes_bitmapimage_coverter"/>
         <utils:SecondsToString x:Key="seconds_string_coverter"/>

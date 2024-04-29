@@ -17,11 +17,21 @@
 	<ApplicationIcon>Assets\image\music.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Pages\BasePage.xaml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Pages\BasePage.xaml" />
+    <None Remove="Pages\CommentPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\MainPage.xaml" />
+    <None Remove="Resources\AppDictionary.xaml" />
+    <None Remove="UserControls\CommentUnitControl.xaml" />
     <None Remove="UserControls\LyricControl.xaml" />
     <None Remove="UserControls\PlayerControl.xaml" />
     <None Remove="UserControls\PlayingListControl.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="Pages\BasePage.xaml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,6 +65,16 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <Page Update="UserControls\CommentUnitControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\CommentPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
     <Page Update="Pages\HomePage.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -76,6 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="UserControls\PlayerControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Resources\AppDictionary.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>

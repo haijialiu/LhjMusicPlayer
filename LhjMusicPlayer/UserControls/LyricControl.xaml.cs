@@ -71,8 +71,11 @@ namespace LhjMusicPlayer.UserControls
                                     {
                                         LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex - 6]);
                                     }
-                                    LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex],ScrollIntoViewAlignment.Default);
-                                    LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex + 8]);
+                                    if (lyricPlayer.CurrentLyricIndex >= 0)
+                                    {
+                                        LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex]);
+                                        LyricList.ScrollIntoView(lyricPlayer.Words[lyricPlayer.CurrentLyricIndex + 8]);
+                                    }
                                 }
                                 else if (LyricList.Items.Count > 0)
                                 {

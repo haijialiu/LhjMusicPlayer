@@ -8,9 +8,12 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    Background="Transparent">
 
-    <Grid>
-        <TextBlock>这是主页，会添加导入歌曲，添加歌单等功能</TextBlock>
-    </Grid>
+    <RelativePanel>
+        <!--<TextBlock>这是主页，会添加导入歌曲，添加歌单等功能</TextBlock>-->
+        <StackPanel>
+            
+        </StackPanel>
+    </RelativePanel>
 </Page>

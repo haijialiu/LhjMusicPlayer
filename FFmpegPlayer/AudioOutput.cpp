@@ -36,7 +36,7 @@ media::AudioOutput::~AudioOutput()
     Log::debug("AudioOutput::~AudioOutput");
 #endif
 }
-std::ofstream dump_pcm_cpp("dump_cpp.pcm",std::ios::out|std::ios::binary);
+//std::ofstream dump_pcm_cpp("dump_cpp.pcm",std::ios::out|std::ios::binary);
 void media::fill_audio_pcm(void* userdata,Uint8* stream,int len)
 {
     AudioOutput* data = (AudioOutput*)userdata;
@@ -129,8 +129,8 @@ void media::fill_audio_pcm(void* userdata,Uint8* stream,int len)
             //assert(audio_buf_index + len1 <= (AVCODEC_MAX_AUDIO_FRAME_SIZE * 3) / 2);
             memcpy(stream, audio_buf + audio_buf_index, len1);
             //输出pcm
-            dump_pcm_cpp.write((char*)audio_buf + audio_buf_index, len1);
-            dump_pcm_cpp.flush();
+            //dump_pcm_cpp.write((char*)audio_buf + audio_buf_index, len1);
+            //dump_pcm_cpp.flush();
         }
         len -= len1;
         stream += len1;

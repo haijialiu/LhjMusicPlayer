@@ -23,6 +23,7 @@ using Windows.Foundation;
 using Windows.Foundation.Collections;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Contacts;
+using LhjMusicPlayer.Pages;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,6 +41,7 @@ namespace LhjMusicPlayer.Views
         private ObservableCollection<Music> musics = [];
         private ObservableCollection<Music> filtedmusics = [];
         private int musicListId = -1;
+        
         public MusicListPage()
         {
             DataContext = App.Current.Services.GetService<MusicListViewModel>();

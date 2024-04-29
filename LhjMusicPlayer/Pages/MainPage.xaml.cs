@@ -24,25 +24,29 @@ namespace LhjMusicPlayer.Pages
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        public MainPage()
+        public static MainPage? mainPage;
+        public MainPage()  
         {
             this.InitializeComponent();
-            contentFrame.Navigate(typeof(HomePage));
+            mainPage = this;
+            MainNavigate("主页", typeof(HomePage));
         }
         private void MainNavition_ItemInvoked(NavigationView sender, NavigationViewItemInvokedEventArgs args)
         {
-
-            NaviHeader.Text = args.InvokedItem.ToString();
+            //MainNavition.Header = "123";
             if (args.InvokedItemContainer.Tag.ToString() == "MusicList")
             {
-                //using var context = new DataContext();
+                //MainNavition.Header = null;
+
                 var id = int.Parse(args.InvokedItemContainer.DataContext.ToString()!);
                 //var musicList = context.MusicList.Include(list => list.Musics).Single(list => list.Id == id).Musics;
                 //ViewModel.SetMusics(musicList);
-                contentFrame.Navigate(typeof(MusicListPage), id);
+                //contentFrame.Navigate(typeof(MusicListPage), id);
+                MainNavigate(args.InvokedItem.ToString(),typeof(MusicListPage), id);
+
             } else if(args.InvokedItemContainer.Tag.ToString() == "HomePage")
             {
-                contentFrame.Navigate(typeof(HomePage));
+                MainNavigate("主页",typeof(HomePage));
             }
 
         }
@@ -50,6 +54,17 @@ namespace LhjMusicPlayer.Pages
         private void MainNavition_BackRequested(NavigationView sender, NavigationViewBackRequestedEventArgs args)
         {
             contentFrame.GoBack();
+        }
+
+        public void MainNavigate(string? header,Type? type,object param)
+        {
+            MainNavition.Header = header;
+            contentFrame.Navigate(type, param);
+        }
+        public void MainNavigate(string? header, Type? type)
+        {
+            MainNavition.Header = header;
+            contentFrame.Navigate(type);
         }
     }
 }

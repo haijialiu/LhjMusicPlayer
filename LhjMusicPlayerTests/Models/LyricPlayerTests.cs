@@ -25,7 +25,7 @@ namespace LhjMusicPlayer.Models.Tests
                 index = ~index -1;
             }
             lyricplayer.MusicPlayedTime = 19;
-
+            Console.WriteLine(index.ToString());
         }
     }
 }

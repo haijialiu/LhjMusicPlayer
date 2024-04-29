@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:media="using:Microsoft.UI.Xaml.Media"
+    xmlns:control="using:LhjMusicPlayer.UserControls"
+    xmlns:local="using:LhjMusicPlayer">
+    <media:AcrylicBrush 
+        x:Key="LyricPageAcrylicBrush"
+        TintOpacity="0.1" TintLuminosityOpacity="0.8" TintColor="SkyBlue" FallbackColor="SkyBlue" />
+    
+    <Style x:Key="LyricPageStyle" TargetType="control:PlayerControl">
+        <!--<Setter Property="Background" Value="{StaticResource LyricPageAcrylicBrush}"/>-->
+    </Style>
+</ResourceDictionary>

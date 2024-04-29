@@ -16,6 +16,15 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using LhjMusicPlayer.Models.Database;
+using LhjMusicPlayer.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml.Media.Imaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using LhjMusicPlayer.Common;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -25,7 +34,7 @@ namespace LhjMusicPlayer
     /// <summary>
     /// An empty window that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainWindow : Window
+    public sealed partial class MainWindow : Window, INotifyPropertyChanged
     {
 
         private static WinProc? newWndProc = null;
@@ -49,15 +58,54 @@ namespace LhjMusicPlayer
         //public static int MaxWindowHeight { get; set; } = 1600;
 
         public static MainWindow? mainWindow;
+        //private object dataContext;
+        //private MusicListViewModel ViewModel = App.Current.Services.GetRequiredService<MusicListViewModel>();
+        //private MusicListViewModel ViewModel => (MusicListViewModel)dataContext;
+        //背景图片
+        private BitmapImage backgroundImage = new(new Uri(@"C:\Users\haijialiu\source\repos\LhjMusicPlayer\LhjMusicPlayer\Assets\background.png"));
+        public BitmapImage BackgroundImage
+        {
+            get => backgroundImage;
+            set
+            {
+                if(value !=this.backgroundImage)
+                {
+                    this.backgroundImage = value;
+                    NotifyPropertyChanged();
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public MainWindow()
         {
             this.InitializeComponent();
+            //dataContext = App.Current.Services.GetRequiredService<MusicListViewModel>();
+            
             mainWindow = this;
             Activated += MainWindow_Activated;
+            Closed += MainWindow_Closed;
             RegisterWindowMinMax(this);
             ExtendsContentIntoTitleBar = true;
             MainFrame.Navigate(typeof(MainPage));
         }
+
+        private void MainWindow_Closed(object sender, WindowEventArgs args)
+        {
+            FFmpegPlayer.OperatePlayer("system", "quit");
+        }
+
+        public void SetBackgroundImage(BitmapImage backgroundImage)
+        {
+            this.BackgroundImage = backgroundImage;
+        }
+
+
 
         private void MainWindow_Activated(object sender, WindowActivatedEventArgs args)
         {
