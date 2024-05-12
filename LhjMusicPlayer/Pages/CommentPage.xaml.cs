@@ -1,4 +1,8 @@
+using LhjMusicPlayer.Common;
 using LhjMusicPlayer.Models;
+using LhjMusicPlayer.Models.Database;
+using LhjMusicPlayer.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
@@ -8,6 +12,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -24,10 +29,29 @@ namespace LhjMusicPlayer.Pages
     /// </summary>
     public sealed partial class CommentPage : Page
     {
+        private Music? music = MediaInfo.GetMusic(@"C:\Users\haijialiu\Music\神楽七奈 (かぐら なな) - 鼓動.flac");
+        private CommentViewModel viewModel;
 
         public CommentPage()
         {
+            viewModel =  App.Current.Services.GetRequiredService<CommentViewModel>();
             this.InitializeComponent();
+            viewModel.MusicId = 754;
+            viewModel.LoadComments();
+        }
+
+        private void CommentSubmitButton_Click(object sender, RoutedEventArgs e)
+        {
+            var comment = CommentTextBox.Text;
+            if (comment != "")
+            {
+                viewModel.SaveComment(comment);
+            }
+            CommentTextBox.Text = string.Empty;
+        }
+        private void Remove_Btn_Click(object sender, RoutedEventArgs e)
+        {
+           
         }
     }
 }

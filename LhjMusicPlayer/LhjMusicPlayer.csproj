@@ -24,6 +24,7 @@
     <None Remove="Pages\CommentPage.xaml" />
     <None Remove="Pages\HomePage.xaml" />
     <None Remove="Pages\MainPage.xaml" />
+    <None Remove="Pages\MusicListManagePage.xaml" />
     <None Remove="Resources\AppDictionary.xaml" />
     <None Remove="UserControls\CommentUnitControl.xaml" />
     <None Remove="UserControls\LyricControl.xaml" />
@@ -63,6 +64,11 @@
   -->
   <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
     <ProjectCapability Include="Msix" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\MusicListManagePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="UserControls\CommentUnitControl.xaml">

@@ -7,20 +7,65 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:utils="using:LhjMusicPlayer.Utils"
+    xmlns:models="using:LhjMusicPlayer.Models"
+    xmlns:contorl="using:LhjMusicPlayer.UserControls"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    >
     <Page.Resources>
         <utils:ByteArrayToBitmapImage x:Key="bytes_bitmapimage_coverter"/>
     </Page.Resources>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="120"/>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="200"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         
-        <RelativePanel Grid.Row="0">
+        <StackPanel Margin="0,40,0,0" Orientation="Horizontal" Grid.Row="0">
             <!--<Image Stretch="UniformToFill" x:Name="album_image" Source="{x:Bind music.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
                     Height="100" Width="100" />-->
-        </RelativePanel>
+            <Image Margin="40,0,0,0" Stretch="UniformToFill"
+                   x:Name="album_image" Source="{x:Bind music.AlbumImage,Mode=OneWay,Converter={StaticResource bytes_bitmapimage_coverter},TargetNullValue='/Assets/image/music.png'}"
+                    Height="200" Width="200"
+                   />
+            <StackPanel>
+                <TextBlock Margin="50,0,0,0" FontWeight="Bold" FontSize="50" Text="{x:Bind music.Title}"/>
+                <StackPanel Margin="50,25,0,0" Orientation="Horizontal">
+                    <TextBlock FontSize="25" Text="歌手："/>
+                    <TextBlock FontSize="25" Text="{x:Bind music.Artist}"/>
+                    <TextBlock FontSize="25" Margin="20,0,0,0" Text="专辑："/>
+                    <TextBlock FontSize="25" Text="{x:Bind music.Album}"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <StackPanel  Grid.Row="1">
+            <TextBox x:Name="CommentTextBox" Height="100" Margin="50,0,50,0" TextWrapping="Wrap" PlaceholderText="期待你的评论"/>
+            <Button HorizontalAlignment="Right" Click="CommentSubmitButton_Click" FontSize="20" Margin="0,0,50,0">发布</Button>
+        </StackPanel>
+        <ListView Grid.Row="2" Margin="15,0,0,0"
+                  SelectionMode="None"
+                  ItemsSource="{x:Bind viewModel.Comments,Mode=OneWay}">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="models:Comment">
+                    <ListViewItem 
+                        DataContext="{x:Bind Id}"
+                        RelativePanel.AlignRightWithPanel="True">
+                        <RelativePanel>
+                            <StackPanel RelativePanel.AlignLeftWithPanel="True">
+                            <TextBlock FontSize="16" Text="{x:Bind CreatedTime}"/>
+                            <TextBlock Margin="0,5,0,5" FontSize="18" Text="{x:Bind Content}"/>
+                            </StackPanel>
+
+                            <Button FontFamily="Segoe MDL2 Assets" Content="&#xe74d;"
+                                    RelativePanel.AlignRightWithPanel="True"
+                                    RelativePanel.AlignVerticalCenterWithPanel="True"
+                                    Margin="3,0,3,0" BorderThickness="0"   
+                                    Background="Transparent" FontSize="15"
+                                    Click="Remove_Btn_Click"/>
+                        </RelativePanel>
+                    </ListViewItem>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </Grid>
 </Page>

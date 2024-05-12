@@ -16,6 +16,7 @@ namespace LhjMusicPlayer.Models.Database
         public DbSet<Music> Musics { get; set; }
         public DbSet<MusicList> MusicList { get; set; }
         public DbSet<MusicMusicList> MusicMusicLists { get; set; }
+        public DbSet<Comment> CommentList { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

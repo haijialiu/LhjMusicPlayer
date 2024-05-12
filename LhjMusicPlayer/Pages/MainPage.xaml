@@ -6,12 +6,13 @@
     xmlns:media="using:Microsoft.UI.Xaml.Media"
     xmlns:local="using:LhjMusicPlayer.Pages"
     xmlns:control="using:LhjMusicPlayer.UserControls"
+    xmlns:models="using:LhjMusicPlayer.Models"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
     NavigationCacheMode="Enabled"
     Background="Transparent">
-
+    
     <Grid>
         <Grid.Resources>
             <!--<AcrylicBrush x:Key="NavigationViewDefaultPaneBackground"
@@ -23,29 +24,30 @@
             <media:AcrylicBrush x:Key="NavigationViewExpandedPaneBackground" Opacity="0.5"
                 TintOpacity="0.2" TintLuminosityOpacity="0.5" TintColor="SkyBlue" 
                                 FallbackColor="SkyBlue" />
-
+              
             <!--<SolidColorBrush x:Key="NavigationViewDefaultPaneBackground" Color="Transparent"/>-->
         </Grid.Resources>
         <NavigationView
-
-            x:Name="MainNavition" 
+            x:Name="MainNavView" 
             x:FieldModifier="Public"
-             ItemInvoked="MainNavition_ItemInvoked"
+            SelectionChanged="MainNavView_SelectionChanged"
              IsSettingsVisible="False"
-             BackRequested="MainNavition_BackRequested"
+            IsBackButtonVisible="Collapsed"
              OpenPaneLength="300">
+
+
+            
             
             <NavigationView.MenuItems>
                 <NavigationViewItemHeader Content="我的音乐"/>
                 <NavigationViewItem Icon="Home" Content="主页" Tag="HomePage"/>
                 <NavigationViewItem Icon="Favorite" Content="我喜欢" Tag="MusicList" DataContext="2" />
                 <NavigationViewItem Icon="Download" Content="本地音乐" Tag="MusicList" DataContext="1"/>
-                <NavigationViewItemHeader Content="自建歌单"/>
-
+                <NavigationViewItemHeader Content="自建歌单" Tag="user"/>
 
             </NavigationView.MenuItems>
             
-            <Frame x:Name="contentFrame" />
+            <Frame x:Name="ContentFrame"/>
         </NavigationView>
 
     </Grid>

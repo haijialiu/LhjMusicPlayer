@@ -3,7 +3,6 @@ using LhjMusicPlayer.Models;
 using LhjMusicPlayer.Pages;
 using LhjMusicPlayer.Utils;
 using LhjMusicPlayer.ViewModels;
-using LhjMusicPlayer.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI;
 using Microsoft.UI.Dispatching;
@@ -14,6 +13,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Data;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Media;
+using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.UI.Xaml.Media.Imaging;
 using Microsoft.UI.Xaml.Navigation;
 using System;
@@ -94,7 +94,8 @@ namespace LhjMusicPlayer.UserControls
         private void Comment_Button_Click(object sender, RoutedEventArgs e)
         {
 
-            MainPage.mainPage?.MainNavigate(null, typeof(CommentPage));
+            //MainPage.mainPage?.MainNavigate(null, typeof(CommentPage));
+            MainPage.mainPage?.MainNavigate(null,typeof(CommentPage));
         }
 
         private void play_progress_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)

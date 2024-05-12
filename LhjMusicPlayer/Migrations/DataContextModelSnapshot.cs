@@ -17,6 +17,40 @@ namespace LhjMusicPlayer.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.3");
 
+            modelBuilder.Entity("LhjMusicPlayer.Models.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("Content")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1);
+
+                    b.Property<DateTime>("CreatedTime")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(3)
+                        .HasDefaultValueSql("Datetime(CURRENT_TIMESTAMP,'localtime')");
+
+                    b.Property<int>("MusicId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MusicId");
+
+                    b.ToTable("CommentList", t =>
+                        {
+                            t.HasComment("评论");
+                        });
+                });
+
             modelBuilder.Entity("LhjMusicPlayer.Models.Music", b =>
                 {
                     b.Property<int>("Id")
@@ -121,6 +155,17 @@ namespace LhjMusicPlayer.Migrations
                     b.HasIndex("MusicListId");
 
                     b.ToTable("MusicMusicLists");
+                });
+
+            modelBuilder.Entity("LhjMusicPlayer.Models.Comment", b =>
+                {
+                    b.HasOne("LhjMusicPlayer.Models.Music", "Music")
+                        .WithMany()
+                        .HasForeignKey("MusicId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Music");
                 });
 
             modelBuilder.Entity("LhjMusicPlayer.Models.MusicMusicList", b =>

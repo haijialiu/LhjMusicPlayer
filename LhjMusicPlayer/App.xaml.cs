@@ -53,6 +53,8 @@ namespace LhjMusicPlayer
             //ViewModel
             services.AddSingleton<MusicListViewModel>();
 
+            services.AddSingleton<CommentViewModel>();
+
             return services.BuildServiceProvider();
         }
 

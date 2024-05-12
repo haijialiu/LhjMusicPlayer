@@ -12,8 +12,14 @@
 
     <RelativePanel>
         <!--<TextBlock>这是主页，会添加导入歌曲，添加歌单等功能</TextBlock>-->
-        <StackPanel>
-            
+        <StackPanel 
+            RelativePanel.AlignHorizontalCenterWithPanel="True"
+            RelativePanel.AlignVerticalCenterWithPanel="True"
+            Orientation="Horizontal">
+            <Button Margin="20,20,20,20" Height="250" Width="250" Content="本地导入"
+                    Click="Local_import_Button_Click" Background="Azure" BorderThickness="0" />
+            <Button Margin="20,20,20,20" Height="250" Width="250" Content="歌单管理"
+                    Click="List_Manage_Button_Click" Background="Azure" BorderThickness="0" />
         </StackPanel>
     </RelativePanel>
 </Page>

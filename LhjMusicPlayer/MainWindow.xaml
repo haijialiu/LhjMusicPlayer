@@ -36,6 +36,28 @@
             <Frame x:Name="MainFrame"
                x:FieldModifier="Public" 
                Grid.Row="0" Grid.Column="0" Background="Transparent"/>
+            <InfoBar
+                x:Name="MainInfoBar"
+                x:FieldModifier="Public"
+                Grid.Column="0" Grid.Row="0"
+                Margin="0,40,0,0"
+                Width="500"
+                IsOpen="True"
+                Title="提示" Message="导入音乐中...">
+                <InfoBar.Content>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock x:Name="MainInfoBarContextText" x:FieldModifier="Public" Grid.Column="0" Grid.Row="0" Text="当前："/>
+                        <ProgressBar Grid.Column="0" Grid.Row="1" IsIndeterminate="True" Margin="0,0,0,6" MaxWidth="200"/>
+                    </Grid>
+                </InfoBar.Content>
+            </InfoBar>
             <control:PlayerControl Grid.Row="1" Grid.Column="0"/>
     </Grid>
     </Grid>

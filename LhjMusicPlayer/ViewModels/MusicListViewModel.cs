@@ -40,6 +40,8 @@ namespace LhjMusicPlayer.ViewModels
             //用户列表
             UserLists = new ObservableCollection<MusicList>(musicList.Where(list => list.Type == "user"));
 
+
+
             MusicLists = new ObservableCollection<MusicList>(musicList);
 
             var playingList = musicList.Single(list => list.Title == "playing");
@@ -49,6 +51,8 @@ namespace LhjMusicPlayer.ViewModels
            
             Player.ReplacePlayList(playingList.Musics);
 
+
+           
             threadPoolTimer = ThreadPoolTimer.CreatePeriodicTimer((source) =>
             {
                 if (spyPlayer)
