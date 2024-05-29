@@ -41,6 +41,7 @@ namespace LhjMusicPlayer.Pages
 
         private async void Local_import_Button_Click(object sender, RoutedEventArgs e)
         {
+            
             var folderPicker = new Windows.Storage.Pickers.FolderPicker
             {
                 SuggestedStartLocation = Windows.Storage.Pickers.PickerLocationId.MusicLibrary
@@ -60,6 +61,7 @@ namespace LhjMusicPlayer.Pages
                 var files_path = Directory.GetFiles(path);
                 var infoBar = MainWindow.mainWindow!.MainInfoBar;
                 var text = MainWindow.mainWindow!.MainInfoBarContextText;
+                infoBar.IsOpen = true;
                 await LoadMusic(path);
                 text.Text = "完成";
                 await Task.Delay(3000);

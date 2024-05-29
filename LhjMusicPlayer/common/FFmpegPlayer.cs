@@ -55,7 +55,6 @@ namespace LhjMusicPlayer.Common
             return 0;
         }
 
-        //返回值记得之后回来改
         public static void InitPlayer()
         {
             _ = create_player();

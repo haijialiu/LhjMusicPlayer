@@ -32,11 +32,21 @@ namespace LhjMusicPlayer.Pages
         private Music? music = MediaInfo.GetMusic(@"C:\Users\haijialiu\Music\神楽七奈 (かぐら なな) - 鼓動.flac");
         private CommentViewModel viewModel;
 
+
         public CommentPage()
         {
             viewModel =  App.Current.Services.GetRequiredService<CommentViewModel>();
+
             this.InitializeComponent();
-            viewModel.MusicId = 754;
+        }
+
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+
+            viewModel.MusicId = (int)e.Parameter;
+            //TODO datacontext可优化
+            using var context = new DataContext();
+            music = context.Musics.FirstOrDefault(music => music.Id == (int)e.Parameter);
             viewModel.LoadComments();
         }
 

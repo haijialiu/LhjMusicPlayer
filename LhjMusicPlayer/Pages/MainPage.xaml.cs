@@ -53,13 +53,13 @@ namespace LhjMusicPlayer.Pages
             }
             ViewModel.UserLists.CollectionChanged += UserLists_CollectionChanged;
         }
-
         private void UserLists_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
 
-            for(int i=4; i< MainNavView.MenuItems.Count;i++)
+
+            while(MainNavView.MenuItems.Count > 5)
             {
-                MainNavView.MenuItems.Remove(MainNavView.MenuItems[i]);
+                MainNavView.MenuItems.Remove(MainNavView.MenuItems[5]);
             }
             foreach(var item in ViewModel.UserLists)
             {

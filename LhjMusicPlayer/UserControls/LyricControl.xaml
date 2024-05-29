@@ -29,17 +29,14 @@
                         <Setter.Value>
                             <ControlTemplate TargetType="ListViewItem">
                                 <ListViewItemPresenter 
-                                    
                                     x:Name="lyric_item"
                                     Foreground="LightGray">
                                     <VisualStateManager.VisualStateGroups>
                                         <VisualStateGroup x:Name="CommonStates">
                                             <VisualState>
                                                 <VisualState.StateTriggers>
-
                                                 </VisualState.StateTriggers>
                                             </VisualState>
-
                                             <VisualState x:Name="Normal">
                                                 <VisualState.Setters>
                                                     <Setter Target="lyric_item.FontSize" Value="30"/>

@@ -22,7 +22,7 @@
         <ListView ItemsSource="{x:Bind ViewModel.UserLists}" Grid.Row="1" Margin="50,0,50,0">
             <ListView.ItemTemplate>
                 <DataTemplate x:DataType="models:MusicList">
-                    <ListViewItem Margin="0,2,0,2" FontSize="20">
+                    <ListViewItem Margin="0,2,0,2" FontSize="20" >
                         <RelativePanel>
                             <TextBlock Text="{x:Bind Name}" RelativePanel.AlignLeftWithPanel="True"/>
                             <Button FontFamily="Segoe MDL2 Assets" Content="&#xe74d;"

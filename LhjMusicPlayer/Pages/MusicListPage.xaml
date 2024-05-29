@@ -95,8 +95,16 @@
                                     Background="Transparent" FontSize="15"
                                     Click="Remove_Btn_Click"/>
                                 <!--添加列表按钮-->
-                                <Button FontFamily="Segoe MDL2 Assets" Content="&#xe710;"
-                                Margin="3,0,50,0" BorderThickness="0"  Background="Transparent" FontSize="15"/>
+                                <Button 
+                                    FontFamily="Segoe MDL2 Assets" Content="&#xe710;"
+                                    Click="Add_Button_Click"
+                                    Loaded="Add_Button_Loaded"
+                                    Margin="3,0,50,0" BorderThickness="0"  Background="Transparent" FontSize="15">
+                                    <Button.ContextFlyout>
+                                        <MenuFlyout x:Name="add_menu"/>
+                                    </Button.ContextFlyout>
+
+                                </Button>
                             </StackPanel>
                             <!--专辑名和时长-->
                             <TextBlock x:Name="album" Width="300"

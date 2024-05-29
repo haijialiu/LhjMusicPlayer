@@ -18,10 +18,8 @@ namespace LhjMusicPlayer.Common
 
         [DllImport(MediaInfoDllPath, CallingConvention = CallingConvention.Cdecl)]
         private static extern MediaInfos get_music_info();
-
         [DllImport(MediaInfoDllPath, CallingConvention = CallingConvention.Cdecl)]
         private static extern void music_free();
-
         public static Music? GetMusic(string filePath)
         {
             if (!File.Exists(filePath)) { throw new FileNotFoundException(); }
@@ -37,7 +35,6 @@ namespace LhjMusicPlayer.Common
                 music.Album = infos.album;
                 music.Time = infos.total_time;
                 var albumData = infos.album_info;
-
                 if (albumData.ImageSize > 0)
                 {
                     byte[] buffer = new byte[albumData.ImageSize];
@@ -48,8 +45,6 @@ namespace LhjMusicPlayer.Common
                 {
                     music.AlbumImage = null;
                 }
-
- 
             }
             music_free();
             return music;

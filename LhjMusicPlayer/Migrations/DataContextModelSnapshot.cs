@@ -157,6 +157,27 @@ namespace LhjMusicPlayer.Migrations
                     b.ToTable("MusicMusicLists");
                 });
 
+            modelBuilder.Entity("LhjMusicPlayer.Models.User", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnOrder(0);
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT")
+                        .HasColumnOrder(1)
+                        .HasComment("用户名");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("user", t =>
+                        {
+                            t.HasComment("用户表");
+                        });
+                });
+
             modelBuilder.Entity("LhjMusicPlayer.Models.Comment", b =>
                 {
                     b.HasOne("LhjMusicPlayer.Models.Music", "Music")

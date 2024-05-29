@@ -42,7 +42,7 @@
                 Grid.Column="0" Grid.Row="0"
                 Margin="0,40,0,0"
                 Width="500"
-                IsOpen="True"
+                IsOpen="False"
                 Title="提示" Message="导入音乐中...">
                 <InfoBar.Content>
                     <Grid>

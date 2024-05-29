@@ -95,7 +95,8 @@ namespace LhjMusicPlayer.UserControls
         {
 
             //MainPage.mainPage?.MainNavigate(null, typeof(CommentPage));
-            MainPage.mainPage?.MainNavigate(null,typeof(CommentPage));
+
+            MainPage.mainPage?.MainNavigate(null,typeof(CommentPage),player.CurrentMusic.Id);
         }
 
         private void play_progress_ManipulationStarted(object sender, ManipulationStartedRoutedEventArgs e)

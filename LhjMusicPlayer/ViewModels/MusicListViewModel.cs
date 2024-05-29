@@ -46,6 +46,13 @@ namespace LhjMusicPlayer.ViewModels
 
             var playingList = musicList.Single(list => list.Title == "playing");
             PlayingList = new ObservableCollection<Music>(context.Entry(playingList).Collection(list => list.Musics).Query());
+
+            var favoList = musicList.Single(list => list.Title == "loving");
+            FavoList = new ObservableCollection<Music>(context.Entry(favoList).Collection(list => list.Musics).Query());
+            
+            var localList = musicList.Single(list => list.Title == "local");
+            LocalList = new ObservableCollection<Music>(context.Entry(localList).Collection(list => list.Musics).Query());
+
             Player = App.Current.Services.GetRequiredService<MusicPlayer>();
             LyricPlayer = App.Current.Services.GetRequiredService<LyricPlayer>();
            
@@ -94,6 +101,48 @@ namespace LhjMusicPlayer.ViewModels
             PlayingList.Clear();
             context.MusicList.Include(list => list.Musics).Single(list => list.Id == listId).Musics.ForEach(PlayingList.Add);
         }
+        public void UpdateAllData()
+        {
+            UpdateData("user");
+            UpdateData("favo");
+            UpdateData("local");
+        }
+        public void UpdateData(string name)
+        {
+            using var context = new DataContext();
+            var musicList = context.MusicList.Include(list => list.Musics);
+            if (name == "userlist")
+            {
+                UserLists.Clear();
+                
+               
+                foreach (var item in musicList.Where(list => list.Type == "user"))
+                {
+                    UserLists.Add(item);
+                }
+            }
+            else if(name == "favo")
+            {
+                var favoList = musicList.Single(list => list.Title == "loving");
+                foreach (var item in context.Entry(favoList).Collection(list => list.Musics).Query())
+                {
+                    FavoList.Add(item);
+                }
+            }
+            else if (name == "local")
+            {
+                var localList = musicList.Single(list => list.Title == "local");
+                foreach (var item in context.Entry(localList).Collection(list => list.Musics).Query())
+                {
+                    LocalList.Add(item);
+                }
+            }
+            MusicLists.Clear();
+            foreach (var item in musicList)
+            {
+                MusicLists.Add(item);
+            }
+        }
 
         private MusicPlayer Player { get; }
         private LyricPlayer LyricPlayer { get; }
@@ -102,10 +151,17 @@ namespace LhjMusicPlayer.ViewModels
         public ObservableCollection<MusicList> MusicLists { get; } = [];
 
         //用户自定义的列表
-        public ObservableCollection<MusicList> UserLists { get; set; } = [];
+        public ObservableCollection<MusicList> UserLists { get; set; }
 
-        //当前播放列表
-        public ObservableCollection<Music> PlayingList { get; private set; } = [];
+
+
+        //本地歌单
+        public ObservableCollection<Music> LocalList { get; set; } = [];        
+        //收藏歌单
+        public ObservableCollection<Music> FavoList { get; set; }
+
+        //当前播放歌单
+        public ObservableCollection<Music> PlayingList { get; set; } = [];
 
         //初始化数据库
         private static void Init()
@@ -137,5 +193,6 @@ namespace LhjMusicPlayer.ViewModels
            
             context.SaveChanges();
         }
+
     }
 }

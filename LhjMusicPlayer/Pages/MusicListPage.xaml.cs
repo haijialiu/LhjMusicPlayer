@@ -24,6 +24,7 @@ using Windows.Foundation.Collections;
 using System.Collections.ObjectModel;
 using Windows.ApplicationModel.Contacts;
 using LhjMusicPlayer.Pages;
+using LhjMusicPlayer.Models.Database;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -48,6 +49,7 @@ namespace LhjMusicPlayer.Pages
             player = App.Current.Services.GetRequiredService<MusicPlayer>();
             InitializeComponent();
             
+            
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -56,8 +58,17 @@ namespace LhjMusicPlayer.Pages
             {
                 musicListId = id;
                 var musicList = ViewModel.MusicLists.FirstOrDefault(list => list.Id == id)!.Musics;
-                musics = new ObservableCollection<Music>(musicList);
-                filtedmusics = new ObservableCollection<Music>(musics);
+                musics.Clear();
+                filtedmusics.Clear();
+                musicList.ForEach(music =>
+                {
+                    musics.Add(music);
+                    filtedmusics.Add(music);
+                });
+            }
+            foreach (var item in music_list.Items)
+            {
+                
             }
         }
 
@@ -65,11 +76,9 @@ namespace LhjMusicPlayer.Pages
         private void Play_Btn_Click(object sender, RoutedEventArgs e)
         {
             var item = ((FrameworkElement)sender).DataContext;
-
             int index = music_list.Items.IndexOf(item);
             MusicPlayer.Operate("switch", index.ToString());
             player.PlayStatus = true;
-
         }
 
         private void ListViewItem_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
@@ -82,10 +91,22 @@ namespace LhjMusicPlayer.Pages
 
         private void Remove_Btn_Click(object sender, RoutedEventArgs e)
         {
+            using var context = new DataContext();
+
             var item = ((FrameworkElement)sender).DataContext;
 
             int index = music_list.Items.IndexOf(item);
             musics!.RemoveAt(index);
+            filtedmusics.RemoveAt(index);
+            var btn = sender as Button;
+            var music = btn?.DataContext as Music;
+            if(music != null)
+            {
+                var mlist = context.MusicMusicLists.Single(list => (list.MusicId== music.Id)&&(list.MusicListId==musicListId));
+                context.Remove(mlist);
+                context.SaveChanges();
+                ViewModel.UpdateData("user");
+            }
 
             //MusicPlayer.Operate("remove", index.ToString());
         }
@@ -118,23 +139,63 @@ namespace LhjMusicPlayer.Pages
                         filtedmusics.Remove(item);
                     }
                 }
-
                 foreach (var item in filtered)
                 {
-
                     if(!filtedmusics.Contains(item))
                     {
                         filtedmusics.Add(item);
                     }
                 }
 
-            }
-
-                          
+            }                 
         }
 
+        private void Add_Button_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
 
+        private void Add_Button_Loaded(object sender, RoutedEventArgs e)
+        {
 
+            if (sender is Button button)
+            {
+                var flyout = new MenuFlyout();
+
+                if (button.ContextFlyout is MenuFlyout menuFlyout)
+                {
+                    ViewModel.UserLists.ToList().ForEach(item =>
+                    {
+                        var menuItem = new MenuFlyoutItem()
+                        {
+                            Text = item.Title,
+                            //DataContext = item.Id,
+                            Tag = item.Id
+                        };
+                        menuItem.Click += Add_MenuItem_Click;
+                        menuFlyout.Items.Add(menuItem);
+                    });
+                    button.Flyout = menuFlyout;
+                }
+            }
+        }
+        private void Add_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuFlyoutItem item)
+            {
+                if (item.DataContext is Music music)
+                {
+                    var list = ViewModel.UserLists.Where(list => list.Id == int.Parse(item.Tag.ToString()!));
+                    using var context = new DataContext();
+                    context.MusicMusicLists.Add(new MusicMusicList()
+                    {
+                        MusicId = music.Id,
+                        MusicListId = int.Parse(item.Tag.ToString()!)
+                    });
+                    context.SaveChanges();
+                    ViewModel.UpdateData("user");
+                }
+            }
+        }
     }
 }

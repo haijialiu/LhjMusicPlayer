@@ -14,6 +14,7 @@ using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Navigation;
 using LhjMusicPlayer.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
+using LhjMusicPlayer.Models;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -34,12 +35,17 @@ namespace LhjMusicPlayer.Pages
 
         private void AddList_Button_Click(object sender, RoutedEventArgs e)
         {
+            var title = ListNameBox.Text;
+            ViewModel.UserLists.Add(new Models.MusicList() {
+                Title = title,
+                Name = title
+            });
 
         }
 
         private void Remove_Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            ViewModel.UserLists.Remove((MusicList)((Button)sender).DataContext);
         }
     }
 }
